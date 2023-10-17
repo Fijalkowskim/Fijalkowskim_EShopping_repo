@@ -3,7 +3,8 @@ package Model;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Model {
+public class DataManager {
+    public enum ItemBuyResult {BOUGHT, NOT_ENOUGH_MONEY, ITEM_NOT_IN_STOCK}
     ShopStock shopStock;
     UserData userData;
     public ShopStock getShopStock(){return shopStock;}
@@ -15,17 +16,17 @@ public class Model {
         if(itemIndex >= shopStock.getItemsInStock().size() || itemIndex < 0) return null;
         return shopStock.getItemsInStock().get(itemIndex);
     }
-    public boolean TryToBuyItem(int itemIndex)
+    public ItemBuyResult TryToBuyItem(int itemIndex)
     {
-        if(!shopStock.IsItemAvailable(itemIndex)) return false;
-        if(userData.getCash() < shopStock.getItemsInStock().get(itemIndex).getShopItem().getPrice()) return false;
+        if(!shopStock.IsItemAvailable(itemIndex)) return ItemBuyResult.ITEM_NOT_IN_STOCK;
+        if(userData.getCash() < shopStock.getItemsInStock().get(itemIndex).getShopItem().getPrice()) return ItemBuyResult.NOT_ENOUGH_MONEY;
 
         shopStock.getItemsInStock().get(itemIndex).setCount(shopStock.getItemsInStock().get(itemIndex).getCount()-1);
         userData.setCash(userData.getCash() - shopStock.getItemsInStock().get(itemIndex).getShopItem().getPrice());
-        return true;
+        return ItemBuyResult.BOUGHT;
     }
 
-    public Model() {
+    public DataManager() {
 
         InitShopStock();
         userData = new UserData(567.45f);
@@ -40,7 +41,7 @@ public class Model {
         List<ShopItemContainer> shopItemContainers = new ArrayList<>();
         shopItemContainers.add(new ShopItemContainer(availableItems.get(0), 6));
         shopItemContainers.add(new ShopItemContainer(availableItems.get(1), 12));
-        shopItemContainers.add(new ShopItemContainer(availableItems.get(2), 42300));
+        shopItemContainers.add(new ShopItemContainer(availableItems.get(2), 2));
 
         shopStock = new ShopStock(shopItemContainers);
     }
