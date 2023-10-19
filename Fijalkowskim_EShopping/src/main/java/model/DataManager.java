@@ -1,21 +1,43 @@
-package Model;
-
+package model;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Manages all the data such as shop items or user data (cash).
+ * @author Fijalkowskim
+ * @version %I%, %G%
+ */
 public class DataManager {
+    /**
+     * Represents all possible results of trying to buy an item from the shop.
+     */
     public enum ItemBuyResult {BOUGHT, NOT_ENOUGH_MONEY, ITEM_NOT_IN_STOCK}
     ShopStock shopStock;
     UserData userData;
+    /**
+     * @return Stock of the shop
+     */
     public ShopStock getShopStock(){return shopStock;}
-    public UserData getUserData() {
-        return userData;
-    }
+    /**
+     * @return User data
+     */
+    public UserData getUserData() {return userData;}
+
+    /**
+     * @param itemIndex Index of wanted item
+     * @return Item with given index or null if index is incorrect
+     */
     public ShopItemContainer getCurrentItem(int itemIndex)
     {
         if(itemIndex >= shopStock.getItemsInStock().size() || itemIndex < 0) return null;
         return shopStock.getItemsInStock().get(itemIndex);
     }
+
+    /**
+     * Checks if buying an item is possible. If it is
+     * @param itemIndex Index of an item
+     * @return Appropriate ItemBuyResult
+     */
     public ItemBuyResult TryToBuyItem(int itemIndex)
     {
         if(!shopStock.IsItemAvailable(itemIndex)) return ItemBuyResult.ITEM_NOT_IN_STOCK;
@@ -26,11 +48,18 @@ public class DataManager {
         return ItemBuyResult.BOUGHT;
     }
 
+    /**
+     * Initialises shop stock and user data (cash).
+     */
     public DataManager() {
 
         InitShopStock();
         userData = new UserData(567.45f);
     }
+
+    /**
+     * Initialises shop stock by adding items and their amount
+     */
     void InitShopStock()
     {
         List<ShopItem> availableItems = new ArrayList<>();

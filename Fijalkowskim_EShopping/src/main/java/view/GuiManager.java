@@ -1,19 +1,34 @@
-package View;
+package view;
 
-import Controller.Controller;
-import Model.ShopItemContainer;
-import Model.UserData;
+import model.ShopItemContainer;
+import model.UserData;
 import java.io.IOException;
 import java.util.Scanner;
+/**
+ * Class responsible for displaying content and getting user input.
+ * @author Fijalkowskim
+ * @version %I%, %G%
+ */
 public class GuiManager {
-    public enum InputAction {QUIT, NEXT_ITEM, PREVIOUS_ITEM, BUY, NONE};
+    /**
+     * Type of available actions caused by user input.
+     */
+    public enum InputAction {QUIT, NEXT_ITEM, PREVIOUS_ITEM, BUY_ITEM, NONE};
     Scanner scanner;
+
+    /**
+     * Initialises scanner for user input.
+     */
     public GuiManager() {
         scanner = new Scanner(System.in);
     }
 
-    public void DisplayMainMenu(UserData userData, ShopItemContainer currentItem)
-    {
+    /**
+     * Displays content of application's main menu such as instructions, user's cash and currently selected item.
+     * @param userData Data of the user.
+     * @param currentItem Currently selected item to display.
+     */
+    public void DisplayMainMenu(UserData userData, ShopItemContainer currentItem) {
         System.out.println("--------------------------------------------------------------------------------");
         System.out.println("Your cash: " + userData.getCash());
         System.out.println("------------------------------------------------------");
@@ -32,6 +47,11 @@ public class GuiManager {
         System.out.println("--------------------------------------------------------------------------------");
 
     }
+
+    /**
+     * Displays given message.
+     * @param message Any string message.
+     */
     public void DisplayMessage(String message) {
         System.out.println("#############################\n");
         System.out.println(message);
@@ -39,8 +59,12 @@ public class GuiManager {
         System.out.println("PRESS ANY KEY AND CLICK ENTER TO CONTINUE");
         scanner.next();
     }
-    public InputAction GetUserInput()
-    {
+
+    /**
+     * Waits for user input and returns appropriate action.
+     * @return Input action.
+     */
+    public InputAction GetUserInput() {
         InputAction returnAction = InputAction.NONE;
         try {
             int userInput = System.in.read();
@@ -53,7 +77,7 @@ public class GuiManager {
                     returnAction = InputAction.NEXT_ITEM;
                     break;
                 case 'b':
-                    returnAction = InputAction.BUY;
+                    returnAction = InputAction.BUY_ITEM;
                     break;
                 case 'q':
                     returnAction = InputAction.QUIT;
@@ -66,6 +90,4 @@ public class GuiManager {
         }
         return returnAction;
     }
-
-
 }
