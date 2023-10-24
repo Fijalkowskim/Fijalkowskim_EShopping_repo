@@ -75,4 +75,18 @@ public class DataManager {
         shopStock = new ShopStock(shopItemContainers);
     }
 
+    /**
+     * Tries to add new item to stock only if it is not already there.
+     * @param item Item
+     * @param itemInStock Amount of this item
+     * @return True if item was successfully added, false if it is already in stock.
+     */
+    public boolean TryAddingItemToStock(ShopItem item, int itemInStock)
+    {
+        if (shopStock.IsItemAddedToStock(item))
+            return false;
+        shopStock.AddItemToStock(item, itemInStock);
+        return true;
+    }
+
 }
