@@ -24,6 +24,7 @@ public class UserData {
      * @param cash User's cash.
      */
     public void setCash(float cash) {
+        if(cash < 0)return;
         this.cash = cash;
     }
 }

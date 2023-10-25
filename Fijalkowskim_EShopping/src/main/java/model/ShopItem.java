@@ -5,8 +5,13 @@ package model;
  * @version %I%, %G%
  */
 public class ShopItem {
+    int id;
     String name;
     float price;
+    /**
+     * @return ID of the item.
+     */
+    public int getID(){return id;}
 
     /**
      * @return Name of the item.
@@ -23,5 +28,5 @@ public class ShopItem {
      * @param name Item's name.
      * @param price Item's price.
      */
-    public ShopItem(String name, float price){this.name = name; this.price = price;}
+    public ShopItem(int id, String name, float price){this.id = id; this.name = name; this.price = price;}
 }

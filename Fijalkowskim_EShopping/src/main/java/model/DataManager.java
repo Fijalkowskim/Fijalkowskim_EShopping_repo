@@ -11,7 +11,6 @@ public class DataManager {
     /**
      * Represents all possible results of trying to buy an item from the shop.
      */
-    public enum ItemBuyResult {BOUGHT, NOT_ENOUGH_MONEY, ITEM_NOT_IN_STOCK}
     ShopStock shopStock;
     UserData userData;
     /**
@@ -34,19 +33,25 @@ public class DataManager {
     }
 
     /**
-     * Checks if buying an item is possible. If it is
+     * Buys item with given index. Throws an exception if it is not possible.
      * @param itemIndex Index of an item
-     * @return Appropriate ItemBuyResult
      */
-    public ItemBuyResult TryToBuyItem(int itemIndex)
-    {
-        if(!shopStock.IsItemAvailable(itemIndex)) return ItemBuyResult.ITEM_NOT_IN_STOCK;
-        if(userData.getCash() < shopStock.getItemsInStock().get(itemIndex).getShopItem().getPrice()) return ItemBuyResult.NOT_ENOUGH_MONEY;
-
-        shopStock.getItemsInStock().get(itemIndex).setCount(shopStock.getItemsInStock().get(itemIndex).getCount()-1);
+    public void BuyAnItem (int itemIndex)throws NotEnoughMoneyException, ItemNotInStockException {
+        if (!shopStock.IsItemAvailable(itemIndex))
+            throw new ItemNotInStockException("Item is not in stock");
+        if (userData.getCash() < shopStock.getItemsInStock().get(itemIndex).getShopItem().getPrice())
+            throw new NotEnoughMoneyException("Not enough money");
+        shopStock.getItemsInStock().get(itemIndex).setCount(shopStock.getItemsInStock().get(itemIndex).getCount() - 1);
         userData.setCash(userData.getCash() - shopStock.getItemsInStock().get(itemIndex).getShopItem().getPrice());
-        return ItemBuyResult.BOUGHT;
     }
+    /*public void BuyAnItem (ShopItem item)throws NotEnoughMoneyException, ItemNotInStockException {
+        if (!shopStock.IsItemAvailable(item))
+            throw new ItemNotInStockException("Item is not in stock");
+        if (userData.getCash() < item.getPrice())
+            throw new NotEnoughMoneyException("Not enough money");
+        shopStock.getItemsInStock().get(itemIndex).setCount(shopStock.getItemsInStock().get(itemIndex).getCount() - 1);
+        userData.setCash(userData.getCash() - shopStock.getItemsInStock().get(itemIndex).getShopItem().getPrice());
+    }*/
 
     /**
      * Initialises shop stock and user data (cash).
@@ -63,16 +68,17 @@ public class DataManager {
     void InitShopStock()
     {
         List<ShopItem> availableItems = new ArrayList<>();
-        availableItems.add(new ShopItem("Bike", 300f));
-        availableItems.add(new ShopItem("SamsungTV", 2050.99f));
-        availableItems.add(new ShopItem("Apple", 0.89f));
+        availableItems.add(new ShopItem(0,"Bike", 300f));
+        availableItems.add(new ShopItem(1,"SamsungTV", 2050.99f));
+        availableItems.add(new ShopItem(2,"Apple", 0.89f));
 
         List<ShopItemContainer> shopItemContainers = new ArrayList<>();
-        shopItemContainers.add(new ShopItemContainer(availableItems.get(0), 6));
-        shopItemContainers.add(new ShopItemContainer(availableItems.get(1), 12));
-        shopItemContainers.add(new ShopItemContainer(availableItems.get(2), 2));
-
         shopStock = new ShopStock(shopItemContainers);
+
+        TryAddingItemToStock(availableItems.get(0), 6);
+        TryAddingItemToStock(availableItems.get(1), 12);
+        TryAddingItemToStock(availableItems.get(2), 2);
+
     }
 
     /**
@@ -83,10 +89,16 @@ public class DataManager {
      */
     public boolean TryAddingItemToStock(ShopItem item, int itemInStock)
     {
-        if (shopStock.IsItemAddedToStock(item))
+        if(item == null || shopStock == null)
             return false;
-        shopStock.AddItemToStock(item, itemInStock);
-        return true;
+        try {
+            shopStock.AddItemToStock(item, itemInStock);
+            return true;
+        }
+        catch(ItemAlreadyInStock ex)
+        {
+            return false;
+        }
     }
 
 }

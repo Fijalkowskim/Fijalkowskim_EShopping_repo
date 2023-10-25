@@ -26,6 +26,7 @@ public class ShopItemContainer {
      * @param count Amount of available items.
      */
     public void setCount(int count){
+        if(count < 0) return;
         this.count = count;
     }
 
@@ -36,6 +37,6 @@ public class ShopItemContainer {
      */
     public ShopItemContainer(ShopItem shopItem, int count) {
         this.shopItem = shopItem;
-        this.count = count;
+        this.count = count < 0 ? 0 : count;
     }
 }

@@ -1,6 +1,8 @@
 package controller;
 
 import model.DataManager;
+import model.ItemNotInStockException;
+import model.NotEnoughMoneyException;
 import view.GuiManager;
 
 /**
@@ -47,22 +49,13 @@ public class Controller {
      */
     void TryToBuyItem() {
         try {
-            DataManager.ItemBuyResult result = dataManager.TryToBuyItem(currentItemIndex);
-            if (result == DataManager.ItemBuyResult.BOUGHT) {
-                guiManager.DisplayMessage("Item bought successfully");
-            } else {
-                switch (result) {
-                    case NOT_ENOUGH_MONEY:
-                        throw new ItemBuyException("Not enough money");
-                    case ITEM_NOT_IN_STOCK:
-                        throw new ItemBuyException("Item is not in stock");
-                }
-
-            }
-        } catch (ItemBuyException err) {
-            guiManager.DisplayMessage("Error: " + err.getMessage());
+            dataManager.BuyAnItem(currentItemIndex);
+            guiManager.DisplayMessage("Item bought successfully");
+        } catch (NotEnoughMoneyException | ItemNotInStockException ex) {
+            guiManager.DisplayMessage("Error: " + ex.getMessage());
         }
     }
+
 
     /**
      * Handles logic of user's input

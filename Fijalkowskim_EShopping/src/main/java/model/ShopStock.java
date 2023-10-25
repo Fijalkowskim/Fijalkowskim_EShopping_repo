@@ -21,8 +21,10 @@ public class ShopStock {
      * @param item Item
      * @param count Number of items in stock
      */
-    public void AddItemToStock(ShopItem item, int count)
+    public void AddItemToStock(ShopItem item, int count) throws ItemAlreadyInStock
     {
+        if(itemsInStock == null || item == null) return;
+        if(!CanAddItemToStock(item)) throw new ItemAlreadyInStock("Item is already in stock");
         itemsInStock.add(new ShopItemContainer(item, count));
     }
 
@@ -43,19 +45,29 @@ public class ShopStock {
     {
         return itemIndex >= itemsInStock.size() || itemIndex < 0 ? false : itemsInStock.get(itemIndex).count > 0;
     }
-
+    /*public boolean IsItemAvailable(ShopItem item)
+    {
+        if(item == null || !CanAddItemToStock(item)) return false;
+        for(ShopItemContainer containter : itemsInStock)
+        {
+            if(containter.shopItem == item && containter.count > 0)
+                return true;
+        }
+        return false;
+    }*/
     /**
      * Checks if item is added to stock
      * @param item Searched item
      * @return True if item is added to stock (even if count is 0), otherwise false
      */
-    public boolean IsItemAddedToStock(ShopItem item)
+    public boolean CanAddItemToStock(ShopItem item)
     {
+        if (itemsInStock == null || item == null) return false;
         for (ShopItemContainer container : itemsInStock){
             if(container.shopItem == item)
-                return true;
+                return false;
         }
-        return false;
+        return true;
     }
 
     /**
@@ -64,7 +76,7 @@ public class ShopStock {
      * @return Index of given item or -1 if item is not in stock.
      */
     public int TryToGetItemIndex(ShopItem item){
-        if(!IsItemAddedToStock(item))
+        if(!CanAddItemToStock(item))
             return -1;
         for (int i = 0; i < itemsInStock.size(); i++) {
             if(itemsInStock.get(i).shopItem == item)
