@@ -2,7 +2,7 @@ package model;
 /**
  * Exception thrown while trying to buy an item, and it is not in stock.
  * @author Fijalkowskim
- * @version %I%, %G%
+ * @version 1.0
  */
 public class ItemNotInStockException extends Exception{
     /**

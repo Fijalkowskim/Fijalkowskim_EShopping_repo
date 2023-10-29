@@ -31,57 +31,67 @@ public class DataManagerTest {
     @Test
     public void testItemBuyNotEnoughMoney() throws NotEnoughMoneyException{
         dataManager.userData.cash = 0;
+
+        ShopItem item = dataManager.CreateNewShopItem("Test", 999f, "");
+        try {
+            dataManager.AddItemToDatabase(item, 1);
+        }
+        catch(ItemAlreadyInDatabaseException ex){}
+        catch(IllegalArgumentException ex){}
+
         try{
-            ShopItem item = new ShopItem(999,"TestItem", 1f);
-            dataManager.TryAddingItemToStock(item, 0);
-            dataManager.BuyAnItem(dataManager.getShopStock().TryToGetItemIndex(item));
+            dataManager.BuyAnItem(item.getID());
         }
-        catch(ItemNotInStockException ex)
-        {
-
-        }
+        catch(ItemNotInStockException ex){}
     }
-
     @Test
     public void testItemBuyNotInStock() throws ItemNotInStockException{
         dataManager.userData.cash = 10;
-
+        ShopItem item = dataManager.CreateNewShopItem("Test", 1, "");
         try {
-            ShopItem item = new ShopItem(999,"TestItem", 0.1f);
-            dataManager.TryAddingItemToStock(item, 0);
-            dataManager.BuyAnItem(dataManager.getShopStock().TryToGetItemIndex(item));
+            dataManager.AddItemToDatabase(item, 0);
         }
-        catch(NotEnoughMoneyException ex)
-        {
+        catch(ItemAlreadyInDatabaseException ex){}
+        catch(IllegalArgumentException ex){}
 
+        try{
+            dataManager.BuyAnItem(item.getID());
         }
+        catch(NotEnoughMoneyException ex){}
     }
     @Test
-    public void tryAddingNewItemToStock(){
-        ShopItem item = new ShopItem(999,"TestItem", 1f);
-        assertTrue(dataManager.TryAddingItemToStock(item,0));
+    public void testAddingNewItemToDatabase(){
+        ShopItem item = dataManager.CreateNewShopItem("Test", 0f,"");
+        try {
+            dataManager.AddItemToDatabase(item,1);
+        } catch (ItemAlreadyInDatabaseException e) {}
+        assertTrue(dataManager.getShopStock().IsItemInDatabase(item));
     }
     @Test
-    public void tryAddingExistingItemToStock(){
-        ShopItem item = new ShopItem(999,"TestItem", 1f);
-        dataManager.TryAddingItemToStock(item, 0);
-        assertFalse(dataManager.TryAddingItemToStock(item,0));
+    public void testAddingExistingItemToDatabase() throws ItemAlreadyInDatabaseException{
+        ShopItem item = dataManager.CreateNewShopItem("Test", 0f,"");
+        dataManager.AddItemToDatabase(item,1);
+        dataManager.AddItemToDatabase(item,1);
     }
     @Test
-    public void testAddingNullItemToStock(){
+    public void testAddingNullItemToDatabase() throws IllegalArgumentException{
         ShopItem item = null;
-        assertFalse(dataManager.TryAddingItemToStock(item,0));
+        try {
+            dataManager.AddItemToDatabase(item,1);
+        } catch (ItemAlreadyInDatabaseException e) {}
     }
     @ParameterizedTest
     @CsvSource({
             "5,6,true",
             "7,7,false"
     })
-    public void tryAddingExistingItemToStockParametrized(int firstID, int secondID, boolean expected){
-        ShopItem item1 = new ShopItem(firstID, "a",0f);
-        ShopItem item2 = new ShopItem(secondID, "a",0f);
-        dataManager.TryAddingItemToStock(item1, 1);
-        assertEquals(expected, dataManager.TryAddingItemToStock(item2, 1));
+    public void testAddingItemsToDatabaseParametrized(int firstID, int secondID, boolean expected){
+        ShopItem item1 = new ShopItem(firstID, "a",0f,"");
+        ShopItem item2 = new ShopItem(secondID, "b",0f,"");
+        try {
+            dataManager.AddItemToDatabase(item1, 1);
+        } catch (ItemAlreadyInDatabaseException e) {}
+        assertEquals(expected, !dataManager.getShopStock().IsItemInDatabase(item2.getID()));
     }
 
 }

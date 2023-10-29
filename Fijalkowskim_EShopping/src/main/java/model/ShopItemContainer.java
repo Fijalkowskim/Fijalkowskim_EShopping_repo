@@ -3,7 +3,7 @@ package model;
  * Container for items that can also hold their amount available in shop.
  * Usage of this class allows items to be a separate entity (item can exist without their connection to the shop and its available amount).
  * @author Fijalkowskim
- * @version %I%, %G%
+ * @version 1.0
  */
 public class ShopItemContainer {
     ShopItem shopItem;
@@ -37,6 +37,6 @@ public class ShopItemContainer {
      */
     public ShopItemContainer(ShopItem shopItem, int count) {
         this.shopItem = shopItem;
-        this.count = count < 0 ? 0 : count;
+        this.count = Math.max(count, 0);
     }
 }

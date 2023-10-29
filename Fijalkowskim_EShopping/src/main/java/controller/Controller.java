@@ -38,7 +38,7 @@ public class Controller {
      * This method should be used every time the displayed content is changed.
      */
     public void MainLoop() {
-        guiManager.DisplayMainMenu(dataManager.getUserData(), dataManager.getCurrentItem(currentItemIndex));
+        guiManager.DisplayMainMenu(dataManager.getUserData(), dataManager.GetItemContainerByIndex(currentItemIndex));
         HandleUserInput(guiManager.GetUserInput());
 
     }
@@ -67,11 +67,11 @@ public class Controller {
             case QUIT:
                 break;
             case NEXT_ITEM:
-                currentItemIndex = currentItemIndex == dataManager.getShopStock().getItemsInStock().size() - 1 ? 0 : currentItemIndex + 1;
+                currentItemIndex = currentItemIndex == dataManager.getShopStock().getItemDatabase().size() - 1 ? 0 : currentItemIndex + 1;
                 MainLoop();
                 break;
             case PREVIOUS_ITEM:
-                currentItemIndex = currentItemIndex == 0 ? dataManager.getShopStock().getItemsInStock().size() - 1 : currentItemIndex - 1;
+                currentItemIndex = currentItemIndex == 0 ? dataManager.getShopStock().getItemDatabase().size() - 1 : currentItemIndex - 1;
                 MainLoop();
                 break;
             case BUY_ITEM:
