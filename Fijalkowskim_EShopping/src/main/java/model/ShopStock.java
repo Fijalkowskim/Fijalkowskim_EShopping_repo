@@ -9,14 +9,12 @@ import java.util.List;
  */
 public class ShopStock {
     List<ShopItemContainer> itemDatabase;
-
     /**
      * @return List of all items and their amount in stock.
      */
     public List<ShopItemContainer> getItemDatabase() {
         return itemDatabase;
     }
-
     /**
      * Adds given number of items to stock
      * @param item Item
@@ -48,7 +46,6 @@ public class ShopStock {
      * Initialises empty item database
      */
     public ShopStock() {this.itemDatabase = new ArrayList<ShopItemContainer>();}
-
     /**
      * Initialises items in database.
      * @param itemsInDatabase Items in database.
@@ -56,7 +53,6 @@ public class ShopStock {
     public ShopStock(List<ShopItemContainer> itemsInDatabase) {
         this.itemDatabase = itemsInDatabase;
     }
-
     /**
      * Checks if item with given list index is available.
      * @param itemIndex Index in the list of an item.

@@ -2,7 +2,7 @@ package model;
 /**
  * Represents data of the user.
  * @author Fijalkowskim
- * @version %I%, %G%
+ * @version 1.0
  */
 public class UserData {
     float cash;
@@ -12,7 +12,7 @@ public class UserData {
      * @param cash User's cash.
      */
     public UserData(float cash) {
-        this.cash = cash;
+        setCash(cash);
     }
     /**
      * @return User's cash.
@@ -24,7 +24,6 @@ public class UserData {
      * @param cash User's cash.
      */
     public void setCash(float cash) {
-        if(cash < 0)return;
-        this.cash = cash;
+        this.cash = Math.max(cash,0);
     }
 }

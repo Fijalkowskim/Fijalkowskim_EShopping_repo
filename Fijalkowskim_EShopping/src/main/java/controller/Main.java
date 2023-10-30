@@ -22,6 +22,8 @@ public class Main {
             }
             catch(Exception ex){System.out.println(ex.getMessage());}
         }
+        else
+            controller.dataManager.getUserData().setCash(400.0f);
 
         controller.MainLoop();
 

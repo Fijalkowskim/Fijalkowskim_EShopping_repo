@@ -22,7 +22,10 @@ public class ShopStockTest {
     {
         ShopItem item = new ShopItem(0, "test",0f,"");
         stock.AddNewItemToDatabase(item, 1);
-        stock.AddNewItemToDatabase(item, 1);
+
+        assertThrows(ItemAlreadyInDatabaseException.class,()->{
+            stock.AddNewItemToDatabase(item, 1);
+        });
     }
     @Test
     public void testItemAvailable()

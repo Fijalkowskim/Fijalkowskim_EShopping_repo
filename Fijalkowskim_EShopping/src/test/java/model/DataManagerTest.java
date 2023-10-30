@@ -39,10 +39,13 @@ public class DataManagerTest {
         catch(ItemAlreadyInDatabaseException ex){}
         catch(IllegalArgumentException ex){}
 
-        try{
-            dataManager.BuyAnItem(item.getID());
-        }
-        catch(ItemNotInStockException ex){}
+        assertThrows(NotEnoughMoneyException.class, ()-> {
+            try {
+                dataManager.BuyAnItem(item.getID());
+            } catch (ItemNotInStockException ex) {
+            }
+        });
+
     }
     @Test
     public void testItemBuyNotInStock() throws ItemNotInStockException{
@@ -54,10 +57,13 @@ public class DataManagerTest {
         catch(ItemAlreadyInDatabaseException ex){}
         catch(IllegalArgumentException ex){}
 
-        try{
-            dataManager.BuyAnItem(item.getID());
-        }
-        catch(NotEnoughMoneyException ex){}
+
+        assertThrows(ItemNotInStockException.class, ()-> {
+            try{
+                dataManager.BuyAnItem(item.getID());
+            }
+            catch(NotEnoughMoneyException ex){}
+        });
     }
     @Test
     public void testAddingNewItemToDatabase(){
@@ -71,14 +77,19 @@ public class DataManagerTest {
     public void testAddingExistingItemToDatabase() throws ItemAlreadyInDatabaseException{
         ShopItem item = dataManager.CreateNewShopItem("Test", 0f,"");
         dataManager.AddItemToDatabase(item,1);
-        dataManager.AddItemToDatabase(item,1);
+        assertThrows(ItemAlreadyInDatabaseException.class, ()-> {
+            dataManager.AddItemToDatabase(item, 1);
+        });
     }
     @Test
     public void testAddingNullItemToDatabase() throws IllegalArgumentException{
         ShopItem item = null;
-        try {
-            dataManager.AddItemToDatabase(item,1);
-        } catch (ItemAlreadyInDatabaseException e) {}
+        assertThrows(IllegalArgumentException.class, ()-> {
+            try {
+                dataManager.AddItemToDatabase(item, 1);
+            } catch (ItemAlreadyInDatabaseException e) {
+            }
+        });
     }
     @ParameterizedTest
     @CsvSource({

@@ -26,10 +26,16 @@ public class ShopItemContainer {
      * @param count Amount of available items.
      */
     public void setCount(int count){
-        if(count < 0) return;
-        this.count = count;
+        this.count = Math.max(count, 0);
     }
 
+    /**
+     * Sets shop item
+     * @param item The item
+     */
+    public void setShopItem(ShopItem item){
+        this.shopItem = item;
+    }
     /**
      * Sets container's item and it's amount.
      * @param shopItem Item held.
@@ -37,6 +43,6 @@ public class ShopItemContainer {
      */
     public ShopItemContainer(ShopItem shopItem, int count) {
         this.shopItem = shopItem;
-        this.count = Math.max(count, 0);
+        setCount(count);
     }
 }
