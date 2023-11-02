@@ -22,7 +22,7 @@ public class ShopStock {
      */
     public void AddNewItemToDatabase(ShopItem item, int count) throws ItemAlreadyInDatabaseException, IllegalArgumentException
     {
-        if(itemDatabase == null || item == null)
+        if(itemDatabase == null || item == null || count < 0)
             throw new IllegalArgumentException("Null argument");
         if(IsItemInDatabase(item))
             throw new ItemAlreadyInDatabaseException("Item is already in stock");
@@ -35,7 +35,7 @@ public class ShopStock {
      */
     public void AddItemAmountToDatabase(ShopItem item, int count) throws ItemNotInDatabaseException, IllegalArgumentException
     {
-        if(itemDatabase == null || item == null)
+        if(itemDatabase == null || item == null || count < 0)
             throw new IllegalArgumentException("Null argument");
         if(!IsItemInDatabase(item))
             throw new ItemNotInDatabaseException("Item is already in stock");

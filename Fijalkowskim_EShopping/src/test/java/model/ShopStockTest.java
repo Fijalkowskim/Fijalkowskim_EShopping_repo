@@ -45,6 +45,71 @@ public class ShopStockTest {
         assertFalse(stock.IsItemInStock(0));
     }
 
+    @Test
+    public void testAddNullItem() throws ItemAlreadyInDatabaseException {
+
+        assertThrows(IllegalArgumentException.class,()->{
+            stock.AddNewItemToDatabase(null, 1);
+        });
+    }
+    @Test
+    public void testAddNegativeCount() throws ItemAlreadyInDatabaseException {
+        ShopItem item = new ShopItem(0,"test", 1f, "");
+        assertThrows(IllegalArgumentException.class,()->{
+            stock.AddNewItemToDatabase(item, -1);
+        });
+    }
+    @Test
+    public void testIsItemInDatabase(){
+        ShopItem item = new ShopItem(0,"test", 1f, "");
+        try {
+            stock.AddNewItemToDatabase(item,1);
+        } catch (ItemAlreadyInDatabaseException e) {
+            throw new RuntimeException(e);
+        }
+        assertTrue(stock.IsItemInDatabase(item));
+    }
+    @Test
+    public void testIsNullItemInDatabase(){
+        ShopItem item = new ShopItem(0,"test", 1f, "");
+        try {
+            stock.AddNewItemToDatabase(item,1);
+        } catch (ItemAlreadyInDatabaseException e) {
+            throw new RuntimeException(e);
+        }
+        assertFalse(stock.IsItemInDatabase(null));
+    }
+    @Test
+    public void testIsItemInDatabaseById(){
+        ShopItem item = new ShopItem(0,"test", 1f, "");
+        try {
+            stock.AddNewItemToDatabase(item,1);
+        } catch (ItemAlreadyInDatabaseException e) {
+            throw new RuntimeException(e);
+        }
+        assertTrue(stock.IsItemInDatabase(0));
+    }
+    @Test
+    public void testIsItemInStock() {
+        ShopItem item = new ShopItem(0,"test", 1f, "");
+        try {
+            stock.AddNewItemToDatabase(item,1);
+        } catch (ItemAlreadyInDatabaseException e) {
+            throw new RuntimeException(e);
+        }
+        assertTrue(stock.IsItemInStock(item));
+    }
+    @Test
+    public void testIsItemInStockById() {
+        ShopItem item = new ShopItem(0,"test", 1f, "");
+        try {
+            stock.AddNewItemToDatabase(item,1);
+        } catch (ItemAlreadyInDatabaseException e) {
+            throw new RuntimeException(e);
+        }
+        assertTrue(stock.IsItemInStock(item.id));
+    }
+
 
 
 }
