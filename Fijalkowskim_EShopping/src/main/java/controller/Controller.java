@@ -1,9 +1,9 @@
 package controller;
 
-import model.DataManager;
-import model.ItemNotInStockException;
-import model.NotEnoughMoneyException;
+import model.*;
 import view.GuiManager;
+
+import java.util.List;
 
 /**
  * Main controller of the program. It is the only class used in main method.
@@ -23,6 +23,10 @@ public class Controller {
      * Index of currently selected shop item.
      */
     int currentItemIndex;
+    /**
+     * Shop stock that is already spectated (can be changed when sorting is used).
+     */
+    ShopStock targetedShopStock;
 
     /**
      * Construction initialises managers and currentItemIndex
@@ -31,6 +35,8 @@ public class Controller {
         this.dataManager = new DataManager();
         this.guiManager = new GuiManager();
         currentItemIndex = 0;
+        targetedShopStock = dataManager.getShopStock();
+
     }
 
     /**
@@ -38,7 +44,8 @@ public class Controller {
      * This method should be used every time the displayed content is changed.
      */
     public void MainLoop() {
-        guiManager.DisplayMainMenu(dataManager.getUserData(), dataManager.GetItemContainerByIndex(currentItemIndex));
+        ShopItemContainer currentItem = targetedShopStock.GetItemContainerByIndex(currentItemIndex);
+        guiManager.DisplayMainMenu(dataManager.getUserData(), currentItem, currentItemIndex + 1, targetedShopStock.getItemDatabase().size());
         HandleUserInput(guiManager.GetUserInput());
 
     }
@@ -65,23 +72,28 @@ public class Controller {
     void HandleUserInput(GuiManager.InputAction inputAction) {
         switch (inputAction) {
             case QUIT:
-                break;
+                return;
             case NEXT_ITEM:
-                currentItemIndex = currentItemIndex == dataManager.getShopStock().getItemDatabase().size() - 1 ? 0 : currentItemIndex + 1;
-                MainLoop();
+                currentItemIndex = currentItemIndex == targetedShopStock.getItemDatabase().size() - 1 ? 0 : currentItemIndex + 1;
                 break;
             case PREVIOUS_ITEM:
-                currentItemIndex = currentItemIndex == 0 ? dataManager.getShopStock().getItemDatabase().size() - 1 : currentItemIndex - 1;
-                MainLoop();
+                currentItemIndex = currentItemIndex == 0 ? targetedShopStock.getItemDatabase().size() - 1 : currentItemIndex - 1;
                 break;
             case BUY_ITEM:
                 TryToBuyItem();
-                MainLoop();
                 break;
             case NONE:
-                MainLoop();
                 break;
-
+            case SORT_ASCENDING:
+                targetedShopStock = dataManager.GetSortedShopStock(true);
+                break;
+            case SORT_DESCENDING:
+                targetedShopStock = dataManager.GetSortedShopStock(false);
+                break;
+            case RESET_SORTING:
+                targetedShopStock = dataManager.getShopStock();
+                break;
         }
+        MainLoop();
     }
 }

@@ -31,7 +31,6 @@ public class DataManagerTest {
     @Test
     public void testItemBuyNotEnoughMoney() throws NotEnoughMoneyException{
         dataManager.userData.cash = 0;
-
         ShopItem item = dataManager.CreateNewShopItem("Test", 999f, "");
         try {
             dataManager.AddItemToDatabase(item, 1);

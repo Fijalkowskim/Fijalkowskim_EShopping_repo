@@ -13,7 +13,7 @@ public class GuiManager {
     /**
      * Type of available actions caused by user input.
      */
-    public enum InputAction {QUIT, NEXT_ITEM, PREVIOUS_ITEM, BUY_ITEM, NONE};
+    public enum InputAction {QUIT, NEXT_ITEM, PREVIOUS_ITEM, BUY_ITEM, NONE, SORT_ASCENDING, SORT_DESCENDING, RESET_SORTING};
     Scanner scanner;
 
     /**
@@ -27,12 +27,12 @@ public class GuiManager {
      * Displays content of application's main menu such as instructions, user's cash and currently selected item.
      * @param userData Data of the user.
      * @param currentItem Currently selected item to display.
+     * @param itemListIndex Index in list of current item.
+     * @param numberOfItems Total number of items in list.
      */
-    public void DisplayMainMenu(UserData userData, ShopItemContainer currentItem) {
-        System.out.println("--------------------------------------------------------------------------------");
-        System.out.println("Your cash: " + userData.getCash());
+    public void DisplayMainMenu(UserData userData, ShopItemContainer currentItem, int itemListIndex, int numberOfItems) {
         System.out.println("------------------------------------------------------");
-        System.out.println("Press 'a' to scroll left | Press 'd' to scroll right | Press 'b' to buy an item| Press 'q' to quit");
+        System.out.println("Your cash: " + userData.getCash());
         System.out.println("------------------------------------------------------");
         if(currentItem != null)
         {
@@ -42,10 +42,14 @@ public class GuiManager {
         }
         else
         {
-            System.out.println("No items available in shop");
+            System.out.println("No items available");
         }
-        System.out.println("--------------------------------------------------------------------------------");
+        System.out.println("------------------------------------------------------");
+        System.out.println("Item " + itemListIndex + "/" + numberOfItems);
+        System.out.println("--------------------------------------------------------------------------------------------------");
 
+        System.out.println("Press 'a' to scroll left | Press 'd' to scroll right | Press 'b' to buy an item| Press 'q' to quit");
+        System.out.println("Press 'e' to sort ascending | Press 'r' to reset sorting | Press 't' to sort descending");
     }
 
     /**
@@ -81,6 +85,15 @@ public class GuiManager {
                     break;
                 case 'q':
                     returnAction = InputAction.QUIT;
+                    break;
+                case 'e':
+                    returnAction = InputAction.SORT_ASCENDING;
+                    break;
+                case 'r':
+                    returnAction = InputAction.RESET_SORTING;
+                    break;
+                case 't':
+                    returnAction = InputAction.SORT_DESCENDING;
                     break;
                 default:
 

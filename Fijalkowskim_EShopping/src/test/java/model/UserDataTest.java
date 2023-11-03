@@ -14,14 +14,12 @@ public class UserDataTest {
         userData = new UserData(0);
     }
     @Test
-    public void testSetCashAsNegativeInt()
-    {
+    public void testSetCashAsNegativeInt(){
         userData.setCash(-1);
         assertNotEquals(-1, userData.cash);
     }
     @Test
-    public void testSetCash()
-    {
+    public void testSetCash() {
         userData.setCash(100);
         assertEquals(100, userData.cash);
     }

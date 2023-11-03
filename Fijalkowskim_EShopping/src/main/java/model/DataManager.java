@@ -1,7 +1,9 @@
 package model;
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Manages all the data such as shop items or user data (cash).
@@ -34,14 +36,7 @@ public class DataManager {
         InitShopStock();
         userData = new UserData(cash);
     }
-    /**
-     * @param itemIndex Index of wanted item
-     * @return Item container with given index or null if index is incorrect
-     */
-    public ShopItemContainer GetItemContainerByIndex(int itemIndex) {
-        if(itemIndex >= shopStock.getItemDatabase().size() || itemIndex < 0) return null;
-        return shopStock.getItemDatabase().get(itemIndex);
-    }
+
     /**
      * Buys item with given index. Throws an exception if it is not possible.
      * @param itemIndex Index of an item
@@ -104,6 +99,19 @@ public class DataManager {
         if(item == null || shopStock == null)
             throw new IllegalArgumentException("Parameter is null");
         shopStock.AddNewItemToDatabase(item, count);
+    }
+
+    /**
+     * Sorts shop stock ascending or descending and returns sorted shop stock.
+     * @param ascending True for ascending sort, false for descending.
+     * @return Sorted shop stock
+     */
+    public ShopStock GetSortedShopStock(boolean ascending){
+        List<ShopItemContainer> sortedItemDatabase = shopStock.getItemDatabase().stream()
+                .sorted((container1, container2) -> Float.compare(container1.getShopItem().getPrice(), container2.getShopItem().getPrice()))
+                .collect(Collectors.toList());
+        if(!ascending) Collections.reverse(sortedItemDatabase);
+        return new ShopStock(sortedItemDatabase);
     }
 
 }

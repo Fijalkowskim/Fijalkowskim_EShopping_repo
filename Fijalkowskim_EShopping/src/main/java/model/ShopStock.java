@@ -16,10 +16,19 @@ public class ShopStock {
         return itemDatabase;
     }
     /**
+     * @param itemIndex Index of wanted item
+     * @return Item container with given index or null if index is incorrect
+     */
+    public ShopItemContainer GetItemContainerByIndex(int itemIndex) {
+        if(itemIndex >= getItemDatabase().size() || itemIndex < 0) return null;
+        return getItemDatabase().get(itemIndex);
+    }
+    /**
      * Adds given number of items to stock
      * @param item Item
      * @param count Number of items in stock
      */
+
     public void AddNewItemToDatabase(ShopItem item, int count) throws ItemAlreadyInDatabaseException, IllegalArgumentException
     {
         if(itemDatabase == null || item == null || count < 0)
@@ -147,6 +156,5 @@ public class ShopStock {
         }
         return false;
     }
-
 
 }
