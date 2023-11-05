@@ -59,12 +59,13 @@ public class ShopStockTest {
     @Test
     public void testIsItemInDatabase(){
         ShopItem item = new ShopItem(0,"test", 1f, "");
+        ShopItem item2 = new ShopItem(0,"test", 1f, "");
         try {
             stock.AddNewItemToDatabase(item,1);
         } catch (ItemAlreadyInDatabaseException e) {
             throw new RuntimeException(e);
         }
-        assertTrue(stock.IsItemInDatabase(item));
+        assertTrue(stock.IsItemInDatabase(item2));
     }
     @Test
     public void testIsNullItemInDatabase(){

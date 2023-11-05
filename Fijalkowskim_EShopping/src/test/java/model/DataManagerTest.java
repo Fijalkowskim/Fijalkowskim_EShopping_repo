@@ -8,6 +8,8 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class DataManagerTest {
@@ -16,6 +18,7 @@ public class DataManagerTest {
     void setUp()
     {
         dataManager = new DataManager();
+        dataManager.getShopStock().ClearDatabase();
     }
     @Test
     public void testGetShopStock()
@@ -28,41 +31,59 @@ public class DataManagerTest {
         assertNotEquals(null, dataManager.getUserData());
     }
 
-    @Test
-    public void testItemBuyNotEnoughMoney() throws NotEnoughMoneyException{
-        dataManager.userData.cash = 0;
-        ShopItem item = dataManager.CreateNewShopItem("Test", 999f, "");
-        try {
-            dataManager.AddItemToDatabase(item, 1);
-        }
-        catch(ItemAlreadyInDatabaseException ex){}
-        catch(IllegalArgumentException ex){}
-
-        assertThrows(NotEnoughMoneyException.class, ()-> {
-            try {
-                dataManager.BuyAnItem(item.getID());
-            } catch (ItemNotInStockException ex) {
-            }
-        });
+    enum ExpectedException {
+        NONE,
+        NOT_IN_STOCK,
+        NOT_ENOUGH_MONEY,
+        ILLEGAL_ARGUMENT,
+        ITEM_ALREADY_IN_DATABASE
 
     }
-    @Test
-    public void testItemBuyNotInStock() throws ItemNotInStockException{
-        dataManager.userData.cash = 10;
-        ShopItem item = dataManager.CreateNewShopItem("Test", 1, "");
+    @ParameterizedTest
+    @CsvSource({
+            "999,0,1,NOT_ENOUGH_MONEY",
+            "1,10,0,NOT_IN_STOCK",
+            "1,10,1,NONE"
+    })
+    public void testBuyItem(float price, float cash,int count, ExpectedException expectedException){
+        dataManager.userData.cash = cash;
+        ShopItem item = dataManager.CreateNewShopItem("Test", price, "");
         try {
-            dataManager.AddItemToDatabase(item, 0);
+            dataManager.AddItemToDatabase(item, count);
         }
-        catch(ItemAlreadyInDatabaseException ex){}
-        catch(IllegalArgumentException ex){}
+        catch(IllegalArgumentException | ItemAlreadyInDatabaseException ex){}
 
-
-        assertThrows(ItemNotInStockException.class, ()-> {
-            try{
+            try {
                 dataManager.BuyAnItem(item.getID());
+                assertEquals(expectedException,ExpectedException.NONE);
+            } catch (ItemNotInStockException ex) {
+                assertEquals(expectedException, ExpectedException.NOT_IN_STOCK);
             }
-            catch(NotEnoughMoneyException ex){}
-        });
+            catch (NotEnoughMoneyException e) {
+                assertEquals(expectedException, ExpectedException.NOT_ENOUGH_MONEY);
+            }
+    }
+    @ParameterizedTest
+    @CsvSource({
+            "1,NONE",
+            "0,ITEM_ALREADY_IN_DATABASE",
+            "-1,ILLEGAL_ARGUMENT"
+    })
+    public void testAddItemToDatabase(int id, ExpectedException expectedException){
+        ShopItem baseItem = new ShopItem(0, "BaseItem", 10, "");
+        ShopItem newItem = new ShopItem(id, "NewItem", 1, "");
+        try {
+            dataManager.AddItemToDatabase(baseItem,1);
+        } catch (ItemAlreadyInDatabaseException e) {}
+        try {
+            dataManager.AddItemToDatabase(newItem,1);
+            assertEquals(expectedException, ExpectedException.NONE);
+        } catch (ItemAlreadyInDatabaseException e) {
+            assertEquals(expectedException, ExpectedException.ITEM_ALREADY_IN_DATABASE);
+        }catch (IllegalArgumentException e){
+            assertEquals(expectedException, ExpectedException.ILLEGAL_ARGUMENT);
+
+        }
     }
     @Test
     public void testAddingNewItemToDatabase(){
@@ -102,6 +123,28 @@ public class DataManagerTest {
             dataManager.AddItemToDatabase(item1, 1);
         } catch (ItemAlreadyInDatabaseException e) {}
         assertEquals(expected, !dataManager.getShopStock().IsItemInDatabase(item2.getID()));
+    }
+    @ParameterizedTest
+    @CsvSource({
+            "true,20f,50f,30f,20f,30f,50f",
+            "false,20f,50f,30f,50f,30f,20f"
+    })
+    public void testSortingShopStock(boolean ascendingSort,float firstPrice, float secondPrice, float thirdPrice, float expectedFirstPrice, float expectedSecondPrice, float expectedThirdPrice){
+        ShopItem item1 = new ShopItem(0, "a",firstPrice,"");
+        ShopItem item2 = new ShopItem(1, "b",secondPrice,"");
+        ShopItem item3 = new ShopItem(2, "c",thirdPrice,"");
+        dataManager.getShopStock().ClearDatabase();
+        try {
+            dataManager.AddItemToDatabase(item1, 1);
+            dataManager.AddItemToDatabase(item2, 1);
+            dataManager.AddItemToDatabase(item3, 1);
+        } catch (ItemAlreadyInDatabaseException e) {}
+        ShopStock sortedShopStock = dataManager.GetSortedShopStock(ascendingSort);
+
+        assertEquals(sortedShopStock.GetItemContainerByIndex(0).getShopItem().getPrice(), expectedFirstPrice);
+        assertEquals(sortedShopStock.GetItemContainerByIndex(1).getShopItem().getPrice(), expectedSecondPrice);
+        assertEquals(sortedShopStock.GetItemContainerByIndex(2).getShopItem().getPrice(), expectedThirdPrice);
+
     }
 
 }

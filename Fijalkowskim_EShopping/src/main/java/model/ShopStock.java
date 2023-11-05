@@ -157,4 +157,11 @@ public class ShopStock {
         return false;
     }
 
+    /**
+     * Clears item database
+     */
+    public void ClearDatabase(){
+        itemDatabase.clear();
+    }
+
 }
