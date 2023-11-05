@@ -9,11 +9,7 @@ class ShopItemTest {
     ShopItem item;
     @BeforeEach
     void setUp(){
-        item = new ShopItem(0,"a",0f,"");
-    }
-    @Test
-    public void testGetId() {
-        assertEquals(0,item.getID());
+        item = new ShopItem("a",0f,"");
     }
     @Test
     public void testGetName() {
@@ -26,11 +22,6 @@ class ShopItemTest {
     @Test
     public void testGetDescription() {
         assertEquals("",item.getDescription());
-    }
-    @Test
-    public void testSetId(){
-        item.setId(1);
-        assertEquals(item.id, 1);
     }
     @Test
     public void testSetPrice(){
@@ -46,11 +37,6 @@ class ShopItemTest {
     public void testSetName(){
         item.setName("b");
         assertEquals(item.name, "b");
-    }
-    @Test
-    public void testSetNegativeId(){
-        item.setId(-1);
-        assertNotEquals(-1, item.id);
     }
     @Test
     public void testSetEmptyName(){

@@ -18,7 +18,7 @@ public class ShopStockTest {
 
     @Test
     public void testAddItemDuplicateToStock() throws ItemAlreadyInDatabaseException {
-        ShopItem item = new ShopItem(0, "test",0f,"");
+        ShopItem item = new ShopItem("test",0f,"");
         stock.AddNewItemToDatabase(item, 1);
 
         assertThrows(ItemAlreadyInDatabaseException.class,()->{
@@ -27,7 +27,7 @@ public class ShopStockTest {
     }
     @Test
     public void testItemAvailable() {
-        ShopItem item = new ShopItem(0,"test", 0f,"");
+        ShopItem item = new ShopItem("test", 0f,"");
         try {
             stock.AddNewItemToDatabase(item, 1);
         }catch(ItemAlreadyInDatabaseException ex)
@@ -51,15 +51,15 @@ public class ShopStockTest {
     }
     @Test
     public void testAddNegativeCount() throws ItemAlreadyInDatabaseException {
-        ShopItem item = new ShopItem(0,"test", 1f, "");
+        ShopItem item = new ShopItem("test", 1f, "");
         assertThrows(IllegalArgumentException.class,()->{
             stock.AddNewItemToDatabase(item, -1);
         });
     }
     @Test
     public void testIsItemInDatabase(){
-        ShopItem item = new ShopItem(0,"test", 1f, "");
-        ShopItem item2 = new ShopItem(0,"test", 1f, "");
+        ShopItem item = new ShopItem("test", 1f, "");
+        ShopItem item2 = new ShopItem("test", 1f, "");
         try {
             stock.AddNewItemToDatabase(item,1);
         } catch (ItemAlreadyInDatabaseException e) {
@@ -69,7 +69,7 @@ public class ShopStockTest {
     }
     @Test
     public void testIsNullItemInDatabase(){
-        ShopItem item = new ShopItem(0,"test", 1f, "");
+        ShopItem item = new ShopItem("test", 1f, "");
         try {
             stock.AddNewItemToDatabase(item,1);
         } catch (ItemAlreadyInDatabaseException e) {
@@ -78,18 +78,8 @@ public class ShopStockTest {
         assertFalse(stock.IsItemInDatabase(null));
     }
     @Test
-    public void testIsItemInDatabaseById(){
-        ShopItem item = new ShopItem(0,"test", 1f, "");
-        try {
-            stock.AddNewItemToDatabase(item,1);
-        } catch (ItemAlreadyInDatabaseException e) {
-            throw new RuntimeException(e);
-        }
-        assertTrue(stock.IsItemInDatabase(0));
-    }
-    @Test
     public void testIsItemInStock() {
-        ShopItem item = new ShopItem(0,"test", 1f, "");
+        ShopItem item = new ShopItem("test", 1f, "");
         try {
             stock.AddNewItemToDatabase(item,1);
         } catch (ItemAlreadyInDatabaseException e) {
@@ -97,17 +87,4 @@ public class ShopStockTest {
         }
         assertTrue(stock.IsItemInStock(item));
     }
-    @Test
-    public void testIsItemInStockById() {
-        ShopItem item = new ShopItem(0,"test", 1f, "");
-        try {
-            stock.AddNewItemToDatabase(item,1);
-        } catch (ItemAlreadyInDatabaseException e) {
-            throw new RuntimeException(e);
-        }
-        assertTrue(stock.IsItemInStock(item.id));
-    }
-
-
-
 }

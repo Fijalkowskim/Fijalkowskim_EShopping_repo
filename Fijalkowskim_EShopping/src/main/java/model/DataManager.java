@@ -21,34 +21,22 @@ public class DataManager {
      * @return User data
      */
     public UserData getUserData() {return userData;}
-    /**
-     * Initialises shop stock and user data (cash to 0).
-     */
-    public DataManager() {
-        InitShopStock();
-        userData = new UserData(0);
-    }
+
     /**
      * Initialises shop stock and user cash.
      * @param cash Cash of the user
      */
     public DataManager(float cash){
-        InitShopStock();
+        shopStock = new ShopStock();
         userData = new UserData(cash);
     }
-
     /**
-     * Buys item with given index. Throws an exception if it is not possible.
-     * @param itemIndex Index of an item
+     * Initialises shop stock and user data (cash to 0).
      */
-    public void BuyAnItem(int itemIndex) throws NotEnoughMoneyException, ItemNotInStockException {
-        if (!shopStock.IsItemInStock(itemIndex))
-            throw new ItemNotInStockException("Item is not in stock");
-        if (userData.getCash() < shopStock.getItemDatabase().get(itemIndex).getShopItem().getPrice())
-            throw new NotEnoughMoneyException("Not enough money");
-        shopStock.getItemDatabase().get(itemIndex).setCount(shopStock.getItemDatabase().get(itemIndex).getCount() - 1);
-        userData.setCash(userData.getCash() - shopStock.getItemDatabase().get(itemIndex).getShopItem().getPrice());
+    public DataManager() {
+        this(0);
     }
+
     /**
      * Buys given item. Throws an exception if it is not possible.
      * @param item Given item.
@@ -61,33 +49,17 @@ public class DataManager {
         shopStock.GetItemContainerInDatabase(item).setCount(shopStock.GetItemContainerInDatabase(item).getCount() - 1);
         userData.setCash(userData.getCash() - item.getPrice());
     }
-
     /**
-     * Creates new shop item that is not in database and automatically gives it unique ID.
-     * @param name Name of the item.
-     * @param price Price of the item.
-     * @param description Description of the item.
-     * @return Created shop item.
+     * Loads items froms database to shop stock
      */
-    public ShopItem CreateNewShopItem(String name, float price, String description){
-        int newID = 0;
-        while(shopStock.IsItemInDatabase(newID))
-            newID++;
-        return new ShopItem(newID, name, price, description);
-    }
-    /**
-     * Initialises shop stock by adding items and their amount
-     */
-    void InitShopStock() {
-        shopStock = new ShopStock();
+    public void LoadShopStock() {
 
         try {
-            AddItemToDatabase(CreateNewShopItem("Bike", 300f, "Small BMX for children."), 6);
-            AddItemToDatabase(CreateNewShopItem("SamsungTV", 2050.99f, "75 inch Samsung TV."), 3);
-            AddItemToDatabase(CreateNewShopItem("Apple", 0.89f, "Just an apple."), 21);
+            AddItemToDatabase(new ShopItem("Bike", 300f, "Small BMX for children."), 6);
+            AddItemToDatabase(new ShopItem("SamsungTV", 2050.99f, "75 inch Samsung TV."), 3);
+            AddItemToDatabase(new ShopItem("Apple", 0.89f, "Just an apple."), 21);
         }
-        catch (ItemAlreadyInDatabaseException ex) {}
-        catch (IllegalArgumentException ex) {}
+        catch (ItemAlreadyInDatabaseException | IllegalArgumentException ex) {}
     }
 
     /**

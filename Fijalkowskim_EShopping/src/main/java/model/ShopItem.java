@@ -5,28 +5,21 @@ package model;
  * @version 1.0
  */
 public class ShopItem {
-    int id;
     String name;
     float price;
     String description;
 
     /**
      * Initialises item.
-     * @param id ID of an item.
      * @param name Item's name.
      * @param price Item's price.
      * @param description Item's description.
      */
-    public ShopItem(int id, String name, float price, String description){
-        setId(id);
+    public ShopItem(String name, float price, String description){
         setName(name);
         setPrice(price);
         setDescription(description);
     }
-    /**
-     * @return ID of the item.
-     */
-    public int getID(){return id;}
     /**
      * @return Name of the item.
      */
@@ -39,13 +32,6 @@ public class ShopItem {
      * @return Description of an item.
      */
     public String getDescription() {return description;}
-    /**
-     * Sets id
-     * @param id
-     */
-    public void setId(int id) {
-        this.id = Math.max(id, 0);
-    }
     /**
      * Sets name
      * @param name
@@ -66,19 +52,6 @@ public class ShopItem {
      */
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        ShopItem shopItem = (ShopItem) o;
-        return id == shopItem.id;
-    }
-
-    @Override
-    public int hashCode() {
-        return Integer.hashCode(id);
     }
 
 }

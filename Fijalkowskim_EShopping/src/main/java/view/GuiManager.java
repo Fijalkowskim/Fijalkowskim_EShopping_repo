@@ -31,7 +31,7 @@ public class GuiManager {
      * @param numberOfItems Total number of items in list.
      */
     public void DisplayMainMenu(UserData userData, ShopItemContainer currentItem, int itemListIndex, int numberOfItems) {
-        System.out.println("------------------------------------------------------");
+        System.out.println("\n\n\n\n\n------------------------------------------------------");
         System.out.println("Your cash: " + userData.getCash());
         System.out.println("------------------------------------------------------");
         if(currentItem != null)
@@ -57,7 +57,7 @@ public class GuiManager {
      * @param message Any string message.
      */
     public void DisplayMessage(String message) {
-        System.out.println("#############################\n");
+        System.out.println("\n\n\n\n\n#############################\n");
         System.out.println(message);
         System.out.println("\n#############################");
         System.out.println("PRESS ANY KEY AND CLICK ENTER TO CONTINUE");

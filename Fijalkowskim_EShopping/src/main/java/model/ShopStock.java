@@ -28,7 +28,6 @@ public class ShopStock {
      * @param item Item
      * @param count Number of items in stock
      */
-
     public void AddNewItemToDatabase(ShopItem item, int count) throws ItemAlreadyInDatabaseException, IllegalArgumentException
     {
         if(itemDatabase == null || item == null || count < 0)
@@ -50,7 +49,6 @@ public class ShopStock {
             throw new ItemNotInDatabaseException("Item is already in stock");
         GetItemContainerInDatabase(item).setCount(GetItemContainerInDatabase(item).getCount() + count);
     }
-
     /**
      * Initialises empty item database
      */
@@ -86,21 +84,6 @@ public class ShopStock {
         }
         return false;
     }
-    /**
-     * Checks if item with given id is available.
-     * @param itemID ID of the item.
-     * @return True if item is available or false when it is not.
-     */
-    public boolean IsItemInStockByID(int itemID)
-    {
-        for(ShopItemContainer container : itemDatabase)
-        {
-            if(container.shopItem.getID() == itemID && container.count > 0)
-                return true;
-        }
-        return false;
-    }
-
     /**
      * If given item exists in database return its container.
      * @param item Given item.
@@ -140,18 +123,6 @@ public class ShopStock {
             return false;
         for (ShopItemContainer shopItemContainer : itemDatabase) {
             if (shopItemContainer.shopItem == item)
-                return true;
-        }
-        return false;
-    }
-    /**
-     * Checks if item with given index is in database.
-     * @param itemID Searched item ID
-     * @return True if item is in database, otherwise false.
-     */
-    public boolean IsItemInDatabase(int itemID){
-        for (ShopItemContainer shopItemContainer : itemDatabase) {
-            if (shopItemContainer.shopItem.getID() == itemID)
                 return true;
         }
         return false;

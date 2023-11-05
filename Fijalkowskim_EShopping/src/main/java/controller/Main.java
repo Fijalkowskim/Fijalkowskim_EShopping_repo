@@ -15,7 +15,7 @@ public class Main {
     {
         Controller controller = new Controller();
 
-        if(args != null) {
+        if(args != null && args.length>0) {
             try{
             float startCash = Float.parseFloat(args[0]);
             controller.dataManager.getUserData().setCash(startCash);

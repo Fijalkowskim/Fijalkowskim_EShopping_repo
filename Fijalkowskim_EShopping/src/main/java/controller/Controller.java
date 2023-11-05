@@ -34,6 +34,7 @@ public class Controller {
     public Controller() {
         this.dataManager = new DataManager();
         this.guiManager = new GuiManager();
+        dataManager.LoadShopStock();
         currentItemIndex = 0;
         targetedShopStock = dataManager.getShopStock();
 
@@ -56,9 +57,9 @@ public class Controller {
      */
     void TryToBuyItem() {
         try {
-            dataManager.BuyAnItem(currentItemIndex);
+            dataManager.BuyAnItem(dataManager.getShopStock().getItemDatabase().get(currentItemIndex).getShopItem());
             guiManager.DisplayMessage("Item bought successfully");
-        } catch (NotEnoughMoneyException | ItemNotInStockException ex) {
+        } catch (NotEnoughMoneyException | ItemNotInStockException | ItemNotInDatabaseException ex) {
             guiManager.DisplayMessage("Error: " + ex.getMessage());
         }
     }
