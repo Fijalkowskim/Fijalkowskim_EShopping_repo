@@ -1,5 +1,8 @@
 package model;
 
+/**
+ * Enum representing all possible exceptions thrown while unit testing model classes.
+ */
 public enum ExpectedException {
     NONE,
     ITEM_NOT_IN_STOCK,

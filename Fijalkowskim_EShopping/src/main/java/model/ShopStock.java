@@ -5,7 +5,7 @@ import java.util.List;
 /**
  * Represents stock of the shop with items and their available amount.
  * @author Fijalkowskim
- * @version 1.0
+ * @version 1.1
  */
 public class ShopStock {
     List<ShopItemContainer> itemDatabase;
@@ -28,7 +28,7 @@ public class ShopStock {
      * @param item Item
      * @param count Number of items in stock
      */
-    public void AddNewItemToDatabase(ShopItem item, int count) throws ItemAlreadyInDatabaseException, IllegalArgumentException
+    public void AddItemToDatabase(ShopItem item, int count) throws ItemAlreadyInDatabaseException, IllegalArgumentException
     {
         if(itemDatabase == null || item == null || count < 0)
             throw new IllegalArgumentException("Null argument");
@@ -61,15 +61,6 @@ public class ShopStock {
         this.itemDatabase = itemsInDatabase;
     }
     /**
-     * Checks if item with given list index is available.
-     * @param itemIndex Index in the list of an item.
-     * @return True if item is available or false when it is not.
-     */
-    public boolean IsItemInStock(int itemIndex)
-    {
-        return itemIndex < itemDatabase.size() && itemIndex >= 0 && itemDatabase.get(itemIndex).count > 0;
-    }
-    /**
      * Checks if given item is available.
      * @param item Searched item.
      * @return True if item is available or false when it is not.
@@ -98,21 +89,6 @@ public class ShopStock {
         }
         return null;
     }
-
-    /**
-     * Tries to get an index of given item in shopStock list.
-     * @param item Searched item
-     * @return Index of given item or -1 if item is not in stock.
-     */
-    public int TryToGetItemIndex(ShopItem item) throws ItemNotInDatabaseException{
-        if(!IsItemInStock(item))
-            throw new ItemNotInDatabaseException("Item is not in database");
-        for (int i = 0; i < itemDatabase.size(); i++) {
-            if(itemDatabase.get(i).shopItem == item)
-                return i;
-        }
-        throw new ItemNotInDatabaseException("Item is not in database");
-    }
     /**
      * Checks if item is in database.
      * @param item Searched item
@@ -134,5 +110,4 @@ public class ShopStock {
     public void ClearDatabase(){
         itemDatabase.clear();
     }
-
 }

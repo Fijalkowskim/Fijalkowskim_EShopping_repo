@@ -1,6 +1,4 @@
 package model;
-import java.security.InvalidParameterException;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -8,7 +6,7 @@ import java.util.stream.Collectors;
 /**
  * Manages all the data such as shop items or user data (cash).
  * @author Fijalkowskim
- * @version 1.0
+ * @version 1.1
  */
 public class DataManager {
     ShopStock shopStock;
@@ -42,6 +40,8 @@ public class DataManager {
      * @param item Given item.
      */
     public void BuyAnItem(ShopItem item) throws NotEnoughMoneyException, ItemNotInStockException, ItemNotInDatabaseException {
+        if(!shopStock.IsItemInDatabase(item))
+            throw new ItemNotInDatabaseException(("Item is not in database"));
         if (!shopStock.IsItemInStock(item))
             throw new ItemNotInStockException("Item is not in stock");
         if (userData.getCash() < item.getPrice())
@@ -68,9 +68,9 @@ public class DataManager {
      * @param count Amount of this item
      */
     public void AddItemToDatabase(ShopItem item, int count) throws ItemAlreadyInDatabaseException, IllegalArgumentException {
-        if(item == null || shopStock == null)
-            throw new IllegalArgumentException("Parameter is null");
-        shopStock.AddNewItemToDatabase(item, count);
+        if(item == null || shopStock == null || count < 0)
+            throw new IllegalArgumentException("Illegal argument");
+        shopStock.AddItemToDatabase(item, count);
     }
 
     /**

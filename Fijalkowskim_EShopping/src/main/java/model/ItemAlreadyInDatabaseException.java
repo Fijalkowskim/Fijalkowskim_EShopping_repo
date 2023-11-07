@@ -2,7 +2,7 @@ package model;
 /**
  * Exception thrown while trying to add an item to database that is already there
  * @author Fijalkowskim
- * @version 1.0
+ * @version 1.1
  */
 public class ItemAlreadyInDatabaseException extends Exception{
     /**

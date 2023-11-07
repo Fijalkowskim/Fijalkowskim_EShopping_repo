@@ -2,11 +2,10 @@ package model;
 /**
  * Represents data of the user.
  * @author Fijalkowskim
- * @version 1.0
+ * @version 1.1
  */
 public class UserData {
     float cash;
-
     /**
      * Initialises cash.
      * @param cash User's cash.
@@ -14,6 +13,11 @@ public class UserData {
     public UserData(float cash) {
         setCash(cash);
     }
+
+    /**
+     * Initialises user data with no cash.
+     */
+    public UserData(){this(0);}
     /**
      * @return User's cash.
      */

@@ -2,7 +2,7 @@ package model;
 /**
  * Exception thrown while trying to get an item that is not in database.
  * @author Fijalkowskim
- * @version 1.0
+ * @version 1.1
  */
 public class ItemNotInDatabaseException extends Exception {
     /**

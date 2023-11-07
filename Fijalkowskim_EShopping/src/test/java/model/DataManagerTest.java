@@ -9,13 +9,21 @@ import org.junit.jupiter.params.provider.CsvSource;
 
 
 import static org.junit.jupiter.api.Assertions.*;
-
+/**
+ * Unit tests for the DataManager class.
+ * @author Fijalkowskim
+ * @version 1.1
+ */
 public class DataManagerTest {
     DataManager dataManager;
     @BeforeEach
     void setUp() {
         dataManager = new DataManager();
     }
+    /**
+     * Parameterized test for loading shop stock.
+     * @param loadShopStock Boolean value indicating whether to load shop stock.
+     */
     @ParameterizedTest
     @CsvSource({
             "true",
@@ -26,16 +34,25 @@ public class DataManagerTest {
             dataManager.LoadShopStock();
         assertEquals(loadShopStock, !dataManager.getShopStock().getItemDatabase().isEmpty());
     }
-
+    /**
+     * Parameterized test for buying an item.
+     * @param nullItem Should item be null.
+     * @param price Item price.
+     * @param cash User's available cash.
+     * @param count Item count in stock.
+     * @param expectedException Expected exception type.
+     */
     @ParameterizedTest
     @CsvSource({
-            "999,0,1,NOT_ENOUGH_MONEY",
-            "1,10,0,ITEM_NOT_IN_STOCK",
-            "1,10,1,NONE"
+            "true,999,0,1,ITEM_NOT_IN_DATABASE",
+            "false,999,0,1,NOT_ENOUGH_MONEY",
+            "false,1,10,0,ITEM_NOT_IN_STOCK",
+            "false,1,10,1,NONE",
+            "false,1,2,-1,ITEM_NOT_IN_DATABASE"
     })
-    public void testBuyItem(float price, float cash,int count, ExpectedException expectedException){
+    public void testBuyItem(boolean nullItem, float price, float cash,int count, ExpectedException expectedException){
         dataManager.userData.cash = cash;
-        ShopItem item = new ShopItem("Test", price, "");
+        ShopItem item = nullItem ? null : new ShopItem("Test", price, "");
         try {
             dataManager.AddItemToDatabase(item, count);
         }
@@ -46,27 +63,27 @@ public class DataManagerTest {
                 assertEquals(expectedException,ExpectedException.NONE);
             } catch (ItemNotInStockException ex) {
                 assertEquals(expectedException, ExpectedException.ITEM_NOT_IN_STOCK);
-            }
-            catch (NotEnoughMoneyException e) {
+            } catch (NotEnoughMoneyException e) {
                 assertEquals(expectedException, ExpectedException.NOT_ENOUGH_MONEY);
             } catch (ItemNotInDatabaseException e) {
-
+                assertEquals(expectedException, ExpectedException.ITEM_NOT_IN_DATABASE);
             }
     }
+    /**
+     * Parameterized test for adding items to the database.
+     * @param nullItem Should item be null.
+     * @param numberOfRepetitions Number of repetitions for adding an item.
+     * @param expectedException Expected exception type.
+     */
    @ParameterizedTest
     @CsvSource({
-            "1,NONE",
-            "2,ITEM_ALREADY_IN_DATABASE",
-            "0,ILLEGAL_ARGUMENT"
+            "false,0,NONE",
+            "false,1,NONE",
+            "false,2,ITEM_ALREADY_IN_DATABASE",
+            "true,1,ILLEGAL_ARGUMENT",
     })
-    public void testAddItemsToDatabase(int numberOfRepetitions, ExpectedException expectedException){
-       ShopItem item = new ShopItem("a",0f,"");
-
-        if(numberOfRepetitions <= 0)
-        {
-            numberOfRepetitions = 1;
-            item = null;
-        }
+    public void testAddItemsToDatabase(boolean nullItem, int numberOfRepetitions, ExpectedException expectedException){
+       ShopItem item = nullItem ? null : new ShopItem();
 
        for (int i = 0; i < numberOfRepetitions; i++) {
            try {
@@ -82,6 +99,16 @@ public class DataManagerTest {
        assertEquals(expectedException, ExpectedException.NONE);
 
     }
+    /**
+     * Parameterized test for sorting the shop stock.
+     * @param ascendingSort Whether to sort in ascending order.
+     * @param firstPrice Price of the first item.
+     * @param secondPrice Price of the second item.
+     * @param thirdPrice Price of the third item.
+     * @param expectedFirstPrice Expected price of the first item after sorting.
+     * @param expectedSecondPrice Expected price of the second item after sorting.
+     * @param expectedThirdPrice Expected price of the third item after sorting.
+     */
     @ParameterizedTest
     @CsvSource({
             "true,20f,50f,30f,20f,30f,50f",

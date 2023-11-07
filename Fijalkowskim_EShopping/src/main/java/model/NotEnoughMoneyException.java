@@ -2,7 +2,7 @@ package model;
 /**
  * Exception thrown while trying to buy an item and not having enough money.
  * @author Fijalkowskim
- * @version 1.0
+ * @version 1.1
  */
 public class NotEnoughMoneyException extends Exception{
     /**

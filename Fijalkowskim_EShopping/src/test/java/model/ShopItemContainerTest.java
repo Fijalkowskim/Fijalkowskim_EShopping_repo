@@ -1,42 +1,64 @@
 package model;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 import static org.junit.jupiter.api.Assertions.*;
-
-class ShopItemContainerTest {
+/**
+ * Unit tests for the ShopItemContainer class.
+ * @author Fijalkowskim
+ * @version 1.1
+ */
+public class ShopItemContainerTest {
     ShopItemContainer container;
-    @Test
-    public void testNegativeCountInConstructor(){
+    /**
+     * Parameterized test for setting count in the constructor.
+     * @param setCount The count to set in the constructor.
+     * @param expectedCount The expected count after construction.
+     */
+    @ParameterizedTest
+    @CsvSource({
+            "-1,0",
+            "5,5"
+    })
+    public void testContainerSetCountInConstructor(int setCount, int expectedCount){
         ShopItem item = new ShopItem("a",0f,"");
-        container = new ShopItemContainer(item, -1);
-        assertEquals(0,container.count);
+        container = new ShopItemContainer(item, setCount);
+        assertEquals(expectedCount,container.count);
     }
-    @Test
-    public void testSetNegativeCount(){
+    /**
+     * Parameterized test for setting count.
+     * @param setCount The count to set.
+     * @param expectedCount The expected count after setting.
+     */
+    @ParameterizedTest
+    @CsvSource({
+            "-8,0",
+            "7,7"
+    })
+    public void testContainerSetCount(int setCount, int expectedCount){
         ShopItem item = new ShopItem("a",0f,"");
-        container = new ShopItemContainer(item, 10);
-        container.setCount(-10);
-        assertNotEquals(-10,container.count);
+        container = new ShopItemContainer(item, 0);
+        container.setCount(setCount);
+        assertEquals(expectedCount,container.count);
     }
-    @Test
-    public void testSetShopItem(){
-        ShopItem item = new ShopItem("a",0f,"");
-        container = new ShopItemContainer(null, 10);
-        container.setShopItem(item);
+    /**
+     * Parameterized test for getting item container data.
+     * @param nullItem Indicates whether the item is null.
+     * @param itemPrice The price of the item.
+     * @param count The count of items.
+     */
+    @ParameterizedTest
+    @CsvSource({
+            "true,0,10",
+            "false,7,5",
+    })
+    public void testGettingItemContainerData(boolean nullItem, float itemPrice, int count){
+        ShopItem item = nullItem ? null : new ShopItem("a",itemPrice,"");
+        container = new ShopItemContainer(item, count);
         assertEquals(item, container.shopItem);
-    }
-    @Test
-    public void testGetShopItem(){
-        ShopItem item = new ShopItem("a",0f,"");
-        container = new ShopItemContainer(item, 10);
-        assertEquals(item, container.getShopItem());
-    }
-    @Test
-    public void testGetCount(){
-        ShopItem item = new ShopItem("a",0f,"");
-        container = new ShopItemContainer(item, 10);
-        assertEquals(10, container.getCount());
+        assertEquals(count, container.count);
     }
 
 

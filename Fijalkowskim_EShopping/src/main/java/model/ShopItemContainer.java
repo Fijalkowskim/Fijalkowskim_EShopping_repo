@@ -3,7 +3,7 @@ package model;
  * Container for items that can also hold their amount available in shop.
  * Usage of this class allows items to be a separate entity (item can exist without their connection to the shop and its available amount).
  * @author Fijalkowskim
- * @version 1.0
+ * @version 1.1
  */
 public class ShopItemContainer {
     ShopItem shopItem;
