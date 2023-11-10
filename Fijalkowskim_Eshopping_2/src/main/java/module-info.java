@@ -5,4 +5,8 @@ module fijalkowskim.fijalkowskim_eshopping_2 {
 
     opens fijalkowskim.fijalkowskim_eshopping_2 to javafx.fxml;
     exports fijalkowskim.fijalkowskim_eshopping_2;
+    exports controller;
+    opens controller to javafx.fxml;
+    exports view;
+    opens view to javafx.fxml;
 }
