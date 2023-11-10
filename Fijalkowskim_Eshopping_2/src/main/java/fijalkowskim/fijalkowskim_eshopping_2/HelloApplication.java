@@ -1,5 +1,6 @@
 package fijalkowskim.fijalkowskim_eshopping_2;
 
+import controller.Controller;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
