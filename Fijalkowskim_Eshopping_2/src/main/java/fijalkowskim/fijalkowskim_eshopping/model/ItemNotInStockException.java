@@ -1,4 +1,4 @@
-package model;
+package fijalkowskim.fijalkowskim_eshopping.model;
 /**
  * Exception thrown while trying to buy an item, and it is not in stock.
  * @author Fijalkowskim

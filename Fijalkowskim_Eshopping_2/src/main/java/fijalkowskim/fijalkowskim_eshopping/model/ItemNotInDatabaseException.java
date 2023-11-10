@@ -1,4 +1,4 @@
-package model;
+package fijalkowskim.fijalkowskim_eshopping.model;
 /**
  * Exception thrown while trying to get an item that is not in database.
  * @author Fijalkowskim

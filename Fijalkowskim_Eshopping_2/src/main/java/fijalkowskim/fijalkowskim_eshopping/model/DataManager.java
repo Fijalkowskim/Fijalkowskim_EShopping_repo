@@ -1,4 +1,4 @@
-package model;
+package fijalkowskim.fijalkowskim_eshopping.model;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -55,13 +55,9 @@ public class DataManager {
     public void LoadShopStock() {
 
         try {
-            AddItemToDatabase(new ShopItem("Bike", 300f, "Small BMX for children."), 6);
-            shopStock.GetItemContainerByIndex(0).getShopItem().setImageURL("/bike.png");
-            AddItemToDatabase(new ShopItem("SamsungTV", 2050.99f, "75 inch Samsung TV."), 3);
-            shopStock.GetItemContainerByIndex(1).getShopItem().setImageURL("/tv.png");
-
-            AddItemToDatabase(new ShopItem("Apple", 0.89f, "Just an apple."), 21);
-            shopStock.GetItemContainerByIndex(2).getShopItem().setImageURL("/apple.png");
+            AddItemToDatabase(new ShopItem("Bike", 300f, "Small BMX for children.","bike.png"), 6);
+            AddItemToDatabase(new ShopItem("SamsungTV", 2050.99f, "75 inch Samsung TV.","tv.png"), 3);
+            AddItemToDatabase(new ShopItem("Apple", 0.89f, "Just an apple.","apple.png"), 21);
 
         }
         catch (ItemAlreadyInDatabaseException | IllegalArgumentException ex) {}

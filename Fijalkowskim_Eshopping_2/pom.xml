@@ -67,7 +67,7 @@
                         <id>default-cli</id>
                         <configuration>
                             <mainClass>
-                                fijalkowskim.fijalkowskim_eshopping_2/fijalkowskim.fijalkowskim_eshopping_2.HelloApplication
+                                fijalkowskim.fijalkowskim_eshopping_2/fijalkowskim.fijalkowskim_eshopping.MainApplication
                             </mainClass>
                             <launcher>app</launcher>
                             <jlinkZipName>app</jlinkZipName>

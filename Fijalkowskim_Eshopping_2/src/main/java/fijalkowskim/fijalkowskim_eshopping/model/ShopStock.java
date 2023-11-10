@@ -1,4 +1,4 @@
-package model;
+package fijalkowskim.fijalkowskim_eshopping.model;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,4 +1,4 @@
-package model;
+package fijalkowskim.fijalkowskim_eshopping.model;
 /**
  * Container for items that can also hold their amount available in shop.
  * Usage of this class allows items to be a separate entity (item can exist without their connection to the shop and its available amount).

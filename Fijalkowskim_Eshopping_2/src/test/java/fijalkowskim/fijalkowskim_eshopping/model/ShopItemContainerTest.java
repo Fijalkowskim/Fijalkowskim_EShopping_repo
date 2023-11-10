@@ -1,6 +1,7 @@
-package model;
+package fijalkowskim.fijalkowskim_eshopping.model;
 
-import org.junit.jupiter.api.Test;
+import fijalkowskim.fijalkowskim_eshopping.model.ShopItem;
+import fijalkowskim.fijalkowskim_eshopping.model.ShopItemContainer;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 

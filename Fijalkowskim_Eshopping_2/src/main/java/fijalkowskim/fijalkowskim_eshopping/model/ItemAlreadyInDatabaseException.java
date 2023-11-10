@@ -1,4 +1,4 @@
-package model;
+package fijalkowskim.fijalkowskim_eshopping.model;
 /**
  * Exception thrown while trying to add an item to database that is already there
  * @author Fijalkowskim

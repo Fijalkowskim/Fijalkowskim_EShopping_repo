@@ -1,4 +1,4 @@
-package model;
+package fijalkowskim.fijalkowskim_eshopping.model;
 /**
  * Represents data of the user.
  * @author Fijalkowskim

@@ -1,7 +1,6 @@
-package model;
+package fijalkowskim.fijalkowskim_eshopping.model;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import fijalkowskim.fijalkowskim_eshopping.model.UserData;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 

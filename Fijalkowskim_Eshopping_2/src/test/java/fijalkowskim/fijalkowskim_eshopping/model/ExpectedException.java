@@ -1,4 +1,4 @@
-package model;
+package fijalkowskim.fijalkowskim_eshopping.model;
 
 /**
  * Enum representing all possible exceptions thrown while unit testing model classes.
