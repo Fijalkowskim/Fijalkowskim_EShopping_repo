@@ -1,0 +1,9 @@
+[
+  {
+    "name": "Apple",
+    "price": 0.89,
+    "description": "Just an apple",
+    "imageURL": "apple.png",
+    "count": 37
+  }
+]

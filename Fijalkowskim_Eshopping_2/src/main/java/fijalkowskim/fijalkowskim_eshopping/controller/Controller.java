@@ -40,12 +40,11 @@ public class Controller {
     public ShopStock getTargetedShopStock(){
         return targetedShopStock;
     }
-
+    ShopItemContainer currentShopItemContainer;
     public ShopItemContainer getCurrentShopItemContainer() {
         return currentShopItemContainer;
     }
-
-    ShopItemContainer currentShopItemContainer;
+    SortingOrder currentSortingOrder;
     /**
      * Construction initialises managers and currentItemIndex
      */
@@ -54,6 +53,7 @@ public class Controller {
         this.guiManager = guiManager;
         dataManager.LoadShopStock();
         currentItemIndex = 0;
+        currentSortingOrder = SortingOrder.NO_SORTING;
         targetedShopStock = dataManager.getShopStock();
         currentShopItemContainer = targetedShopStock.GetItemContainerByIndex(currentItemIndex);
     }
@@ -78,5 +78,30 @@ public class Controller {
                 currentItemIndex + 1 : currentItemIndex == 0 ? targetedShopStock.getItemDatabase().size() - 1 : currentItemIndex - 1;
         guiManager.SetPageNumber(currentItemIndex + 1, targetedShopStock.getItemDatabase().size());
         return targetedShopStock.GetItemContainerByIndex(currentItemIndex);
+    }
+    public void ShowSpecificItem(ShopItem item){
+        if (item == null || targetedShopStock == null)
+            return;
+        try {
+            currentShopItemContainer = targetedShopStock.GetItemContainerInDatabase(item);
+            currentItemIndex = targetedShopStock.GetItemIndex(item);
+            guiManager.SetPageNumber(currentItemIndex + 1, targetedShopStock.getItemDatabase().size());
+            guiManager.SetDisplayedItem(currentShopItemContainer);
+        } catch (ItemNotInDatabaseException e) {
+            return;
+        }
+    }
+    public void ChangeSorting(SortingOrder newSortingOrder){
+        if(currentSortingOrder == newSortingOrder)
+            return;
+        currentSortingOrder = newSortingOrder;
+        targetedShopStock =
+                newSortingOrder == SortingOrder.ASCENDING ?
+                dataManager.GetSortedShopStock(true) :
+                newSortingOrder == SortingOrder.DESCENDING ?
+                dataManager.GetSortedShopStock(false) :
+                dataManager.getShopStock();
+        guiManager.SetPageNumber(currentItemIndex + 1, targetedShopStock.getItemDatabase().size());
+        guiManager.SetDisplayedItem(targetedShopStock.getItemDatabase().get(currentItemIndex));
     }
 }

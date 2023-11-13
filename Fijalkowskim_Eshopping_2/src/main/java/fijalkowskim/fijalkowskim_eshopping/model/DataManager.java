@@ -1,7 +1,10 @@
 package fijalkowskim.fijalkowskim_eshopping.model;
+import java.io.FileReader;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * Manages all the data such as shop items or user data (cash).
@@ -55,9 +58,39 @@ public class DataManager {
     public void LoadShopStock() {
 
         try {
-            AddItemToDatabase(new ShopItem("Bike", 300f, "Small BMX for children.","bike.png"), 6);
+            /*AddItemToDatabase(new ShopItem("Bike", 300f, "Small BMX for children.","bike.png"), 6);
             AddItemToDatabase(new ShopItem("SamsungTV", 2050.99f, "75 inch Samsung TV.","tv.png"), 3);
             AddItemToDatabase(new ShopItem("Apple", 0.89f, "Just an apple.","apple.png"), 21);
+            AddItemToDatabase(new ShopItem("Creatine 400g", 39.49f, "Creatine monohydrat.","creatine.png"), 117);*/
+
+            ObjectMapper objectMapper = new ObjectMapper();
+
+            // Wczytaj plik JSON
+            File jsonFile = new File("ścieżka/do/twojego/pliku.json");
+            JsonNode rootNode = objectMapper.readTree(jsonFile);
+
+            // Przetwórz każdy element w tablicy
+            List<ShopItemContainer> itemContainers = new ArrayList<>();
+            for (JsonNode jsonNode : rootNode) {
+                ShopItemContainer itemContainer = new ShopItemContainer();
+
+                // Przypisz wartości do itemContainer na podstawie JSON
+                itemContainer.setShopItem(new ShopItem(
+                        jsonNode.get("name").asText(),
+                        (float) jsonNode.get("price").asDouble(),
+                        jsonNode.get("description").asText(),
+                        jsonNode.get("imageURL").asText()
+                ));
+                itemContainer.setCount(jsonNode.get("count").asInt());
+
+                // Dodaj do listy
+                itemContainers.add(itemContainer);
+            }
+
+            // Teraz masz listę ShopItemContainer na podstawie pliku JSON
+            for (ShopItemContainer itemContainer : itemContainers) {
+                System.out.println(itemContainer);
+            }
 
         }
         catch (ItemAlreadyInDatabaseException | IllegalArgumentException ex) {}

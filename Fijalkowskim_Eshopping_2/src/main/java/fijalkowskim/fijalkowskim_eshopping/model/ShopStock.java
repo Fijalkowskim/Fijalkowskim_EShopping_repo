@@ -103,6 +103,13 @@ public class ShopStock {
         }
         return false;
     }
+    public int GetItemIndex(ShopItem item) throws ItemNotInDatabaseException{
+        for (int i = 0; i < itemDatabase.size(); i++) {
+            if(itemDatabase.get(i).shopItem == item)
+                return i;
+        }
+        throw new ItemNotInDatabaseException("Item is not in database");
+    }
 
     /**
      * Clears item database
