@@ -1,5 +1,5 @@
 package fijalkowskim.fijalkowskim_eshopping.model;
-import java.io.FileReader;
+import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -53,50 +53,26 @@ public class DataManager {
         userData.setCash(userData.getCash() - item.getPrice());
     }
     /**
-     * Loads items froms database to shop stock
+     * Loads items from json file and adds them to database.
      */
-    public void LoadShopStock() {
+    public void LoadDatabase() {
 
         try {
-            /*AddItemToDatabase(new ShopItem("Bike", 300f, "Small BMX for children.","bike.png"), 6);
-            AddItemToDatabase(new ShopItem("SamsungTV", 2050.99f, "75 inch Samsung TV.","tv.png"), 3);
-            AddItemToDatabase(new ShopItem("Apple", 0.89f, "Just an apple.","apple.png"), 21);
-            AddItemToDatabase(new ShopItem("Creatine 400g", 39.49f, "Creatine monohydrat.","creatine.png"), 117);*/
-
             ObjectMapper objectMapper = new ObjectMapper();
 
-            // Wczytaj plik JSON
-            File jsonFile = new File("ścieżka/do/twojego/pliku.json");
-            JsonNode rootNode = objectMapper.readTree(jsonFile);
+            JsonNode rootNode = objectMapper.readTree(DataManager.class.getResource("itemDatabase.json"));
 
-            // Przetwórz każdy element w tablicy
-            List<ShopItemContainer> itemContainers = new ArrayList<>();
             for (JsonNode jsonNode : rootNode) {
-                ShopItemContainer itemContainer = new ShopItemContainer();
-
-                // Przypisz wartości do itemContainer na podstawie JSON
-                itemContainer.setShopItem(new ShopItem(
-                        jsonNode.get("name").asText(),
+                AddItemToDatabase(new ShopItem(jsonNode.get("name").asText(),
                         (float) jsonNode.get("price").asDouble(),
                         jsonNode.get("description").asText(),
-                        jsonNode.get("imageURL").asText()
-                ));
-                itemContainer.setCount(jsonNode.get("count").asInt());
-
-                // Dodaj do listy
-                itemContainers.add(itemContainer);
+                        jsonNode.get("imageURL").asText()),
+                        jsonNode.get("count").asInt());
             }
-
-            // Teraz masz listę ShopItemContainer na podstawie pliku JSON
-            for (ShopItemContainer itemContainer : itemContainers) {
-                System.out.println(itemContainer);
-            }
-
-        }
-        catch (ItemAlreadyInDatabaseException | IllegalArgumentException ex) {}
+        } catch (ItemAlreadyInDatabaseException | IllegalArgumentException | IOException e) {}
     }
 
-    /**
+        /**
      * Tries to add new item to database only if it is not already there.
      * @param item Item
      * @param count Amount of this item

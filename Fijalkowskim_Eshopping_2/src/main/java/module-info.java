@@ -1,7 +1,7 @@
 module fijalkowskim.fijalkowskim_eshopping {
     requires javafx.controls;
     requires javafx.fxml;
-
+    requires com.fasterxml.jackson.databind;
 
     opens fijalkowskim.fijalkowskim_eshopping to javafx.fxml;
     opens fijalkowskim.fijalkowskim_eshopping.controller to javafx.fxml;

@@ -28,7 +28,7 @@ public class DataManagerTest {
     })
     public void testLoadShopStock(boolean loadShopStock) {
         if(loadShopStock)
-            dataManager.LoadShopStock();
+            dataManager.LoadDatabase();
         assertEquals(loadShopStock, !dataManager.getShopStock().getItemDatabase().isEmpty());
     }
     /**

@@ -51,7 +51,7 @@ public class Controller {
     public Controller(GuiManager guiManager) {
         this.dataManager = new DataManager();
         this.guiManager = guiManager;
-        dataManager.LoadShopStock();
+        dataManager.LoadDatabase();
         currentItemIndex = 0;
         currentSortingOrder = SortingOrder.NO_SORTING;
         targetedShopStock = dataManager.getShopStock();
