@@ -1,4 +1,0 @@
--------------------------------------------------------------------------------
-Test set: fijalkowskim.fijalkowskim_eshopping.model.DataManagerTest
--------------------------------------------------------------------------------
-Tests run: 13, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.525 s -- in fijalkowskim.fijalkowskim_eshopping.model.DataManagerTest
