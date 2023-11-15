@@ -1,3 +1,5 @@
-controller
-model
-view
+module:fijalkowskim.fijalkowskim_eshopping
+fijalkowskim.fijalkowskim_eshopping
+fijalkowskim.fijalkowskim_eshopping.controller
+fijalkowskim.fijalkowskim_eshopping.model
+fijalkowskim.fijalkowskim_eshopping.view
