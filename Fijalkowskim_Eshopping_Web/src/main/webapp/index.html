@@ -1,0 +1,36 @@
+<html>
+<head>
+    <title>Fijalkowskim Eshopping</title>
+    <link rel="stylesheet" href="css/index.css" />
+    <script src="js/index.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="UTF-8" />
+</head>
+<body>
+<nav>
+    <img src="images/EShoppingLogo.png" alt="LOGO" />
+    <div class="cash-container">
+        <div>Your balance:</div>
+        <div id="cash">999.56$</div>
+    </div>
+</nav>
+<div class="main-display">
+    <button class="change-btn left" data-direction="left" onclick="changeItem('previous')">&lt</button>
+    <div class="item-container">
+        <div class="item-presetation">
+            <img id="item-image" src="images/apple.png" alt="Item" />
+            <div id="item-name">Creatine 400g</div>
+            <p id="item-amount">999 in stock</p>
+        </div>
+        <div class="item-data">
+            <p id="item-price">$2000.59</p>
+            <p id="item-description">Item description</p>
+
+            <button id="buy-btn" onclick="buyCurrentItem()">Buy</button>
+        </div>
+    </div>
+
+    <button class="change-btn right" data-direction="right" onclick="changeItem('next')">&gt</button>
+</div>
+</body>
+</html>
