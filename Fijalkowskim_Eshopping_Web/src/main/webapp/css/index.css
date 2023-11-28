@@ -57,6 +57,13 @@ nav {
 #cash {
     font-size: 3rem;
 }
+#error-container {
+    width: 40%;
+    display: grid;
+    place-items: center;
+    font-size: 2rem;
+    color: var(--price-color);
+}
 .main-display {
     display: flex;
     flex-direction: row;

@@ -2,6 +2,9 @@ package fijalkowskim_eshopping.controller;
 
 import fijalkowskim_eshopping.model.*;
 
+import java.util.Dictionary;
+import java.util.Map;
+
 /**
  * Main controller of the program. It is the only class used in main method.
  * @author Fijalkowskim
@@ -45,7 +48,7 @@ public class Controller {
         return currentShopItemContainer;
     }
 
-    public void TryToBuyItem() throws Exception {
+    public void TryToBuyItem() throws NotEnoughMoneyException,ItemNotInStockException,ItemNotInDatabaseException {
         try {
             ShopItemContainer itemContainer = targetedShopStock.getItemDatabase().get(currentItemIndex);
             dataManager.BuyAnItem(itemContainer.getShopItem());
@@ -88,5 +91,21 @@ public class Controller {
                                 dataManager.GetSortedShopStock(false) :
                                 dataManager.getShopStock();
     }
+    public void LoadSavedData(float savedCash, Map<Integer, Integer> savedItemsAmount, int savedPageIndex){
+            if(savedCash >= 0)
+                dataManager.getUserData().setCash(savedCash);
+            if(savedPageIndex >= 0 && savedPageIndex < targetedShopStock.getItemDatabase().size())
+            {
+                currentItemIndex = savedPageIndex;
+                currentShopItemContainer = targetedShopStock.GetItemContainerByIndex(currentItemIndex);
+            }
+
+            if(savedItemsAmount != null){
+                for (Map.Entry<Integer, Integer> entry : savedItemsAmount.entrySet()){
+                    targetedShopStock.SetItemCount(entry.getKey(), entry.getValue());
+                }
+            }
+    }
+
 
 }

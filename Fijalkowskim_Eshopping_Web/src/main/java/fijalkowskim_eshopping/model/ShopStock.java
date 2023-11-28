@@ -110,7 +110,10 @@ public class ShopStock {
         }
         throw new ItemNotInDatabaseException("Item is not in database");
     }
-
+    public void SetItemCount(int itemIndex, int newCount) {
+        if(itemIndex >= getItemDatabase().size() || itemIndex < 0) return;
+        getItemDatabase().get(itemIndex).setCount(newCount);
+    }
     /**
      * Clears item database
      */

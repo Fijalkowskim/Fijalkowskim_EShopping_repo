@@ -28,7 +28,7 @@ public class ShopStockTest {
             "2,ITEM_ALREADY_IN_DATABASE",
             "0,ILLEGAL_ARGUMENT"
     })
-    public void testAddItemToDatabase(int numberOfRepetitions, ExpectedException expectedException) {
+    public void testAddItemToDatabase(int numberOfRepetitions, ExceptionType expectedException) {
         ShopItem item = new ShopItem("a", 0f, "");
 
         if (numberOfRepetitions <= 0) {
@@ -40,14 +40,14 @@ public class ShopStockTest {
             try {
                 stock.AddItemToDatabase(item, 1);
             } catch (ItemAlreadyInDatabaseException e) {
-                assertEquals(expectedException, ExpectedException.ITEM_ALREADY_IN_DATABASE);
+                assertEquals(expectedException, ExceptionType.ITEM_ALREADY_IN_DATABASE);
                 return;
             } catch (IllegalArgumentException ex) {
-                assertEquals(expectedException, ExpectedException.ILLEGAL_ARGUMENT);
+                assertEquals(expectedException, ExceptionType.ILLEGAL_ARGUMENT);
                 return;
             }
         }
-        assertEquals(expectedException, ExpectedException.NONE);
+        assertEquals(expectedException, ExceptionType.NONE);
     }
     /**
      * Parameterized test for adding item amount to the database.
@@ -63,7 +63,7 @@ public class ShopStockTest {
             "true,false,10,NONE",
             "true,false,-1,ILLEGAL_ARGUMENT",
     })
-    public void testAddItemAmountToDatabase(boolean addItemToDatabase, boolean nullItem, int addedCount, ExpectedException expectedException) {
+    public void testAddItemAmountToDatabase(boolean addItemToDatabase, boolean nullItem, int addedCount, ExceptionType expectedException) {
         ShopItem item = nullItem ? null : new ShopItem("", 10, "");
         if (addItemToDatabase) {
             try {
@@ -71,17 +71,17 @@ public class ShopStockTest {
             } catch (ItemAlreadyInDatabaseException e) {
             } catch (IllegalArgumentException e) {
                 if (nullItem)
-                    assertEquals(expectedException, ExpectedException.ILLEGAL_ARGUMENT);
+                    assertEquals(expectedException, ExceptionType.ILLEGAL_ARGUMENT);
             }
         }
         try {
             stock.AddItemAmountToDatabase(item, addedCount);
             assertEquals(stock.GetItemContainerInDatabase(item).count, addedCount);
-            assertEquals(expectedException, ExpectedException.NONE);
+            assertEquals(expectedException, ExceptionType.NONE);
         } catch (ItemNotInDatabaseException e) {
-            assertEquals(expectedException, ExpectedException.ITEM_NOT_IN_DATABASE);
+            assertEquals(expectedException, ExceptionType.ITEM_NOT_IN_DATABASE);
         } catch (IllegalArgumentException e) {
-            assertEquals(expectedException, ExpectedException.ILLEGAL_ARGUMENT);
+            assertEquals(expectedException, ExceptionType.ILLEGAL_ARGUMENT);
         }
     }
     /**
@@ -121,13 +121,13 @@ public class ShopStockTest {
             "false,true,10,NONE",
             "false,true,-1,ILLEGAL_ARGUMENT",
     })
-    public void testGetItemContainerInDatabase(boolean nullItem, boolean addItemToDatabase,int itemCount,ExpectedException expectedException) {
+    public void testGetItemContainerInDatabase(boolean nullItem, boolean addItemToDatabase, int itemCount, ExceptionType expectedException) {
         ShopItem item = nullItem ? null : new ShopItem();
         if(addItemToDatabase){
             try {
                 stock.AddItemToDatabase(item, itemCount);
             } catch (ItemAlreadyInDatabaseException | IllegalArgumentException e) {
-                assertEquals(expectedException, ExpectedException.ILLEGAL_ARGUMENT);
+                assertEquals(expectedException, ExceptionType.ILLEGAL_ARGUMENT);
                 return;
             }
         }
@@ -135,10 +135,10 @@ public class ShopStockTest {
             ShopItemContainer container = stock.GetItemContainerInDatabase(item);
             assertEquals(container.shopItem, item);
             assertEquals(container.count, itemCount);
-            assertEquals(expectedException, ExpectedException.NONE);
+            assertEquals(expectedException, ExceptionType.NONE);
 
         } catch (ItemNotInDatabaseException e) {
-            assertEquals(expectedException, ExpectedException.ITEM_NOT_IN_DATABASE);
+            assertEquals(expectedException, ExceptionType.ITEM_NOT_IN_DATABASE);
         }
     }
     /**

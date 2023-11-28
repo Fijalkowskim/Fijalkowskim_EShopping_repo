@@ -19,6 +19,7 @@ function buyCurrentItem() {
         if (this.readyState === 4 && this.status === 200) {
             const displayedData = JSON.parse(this.responseText);
             displayShopItemContainer(displayedData.shopItemContainer);
+            displayException(displayedData.exceptionType)
             document.getElementById("cash").innerHTML = displayedData.cash.toFixed(2) + "$";
         }
     };
@@ -34,6 +35,7 @@ function initData(){
             const initData = JSON.parse(this.responseText);
 
             displayShopItemContainer(initData.shopItemContainer);
+            displayException("NONE")
             document.getElementById("cash").innerHTML = initData.cash.toFixed(2) + "$";
         }
     };
@@ -63,3 +65,31 @@ function displayShopItemContainer(shopItemContainer){
 document.addEventListener('DOMContentLoaded', function() {
     initData();
 });
+
+function displayException(exceptionType){
+    var errorText = ""
+    switch(exceptionType){
+        case "NONE":
+            errorText = ""
+            break;
+        case "ITEM_NOT_IN_STOCK":
+            errorText = "Item Not In Stock"
+            break;
+        case "NOT_ENOUGH_MONEY":
+            errorText = "Not Enough Money"
+            break;
+        case "ILLEGAL_ARGUMENT":
+            errorText = "Illegal Argument"
+            break;
+        case "ITEM_ALREADY_IN_DATABASE":
+            errorText = "Item already in database"
+            break;
+        case "ITEM_NOT_IN_DATABASE":
+            errorText = "Item not in database"
+            break;
+        default:
+            errorText = ""
+                break;
+    }
+    document.getElementById("error-container").innerHTML = errorText;
+}

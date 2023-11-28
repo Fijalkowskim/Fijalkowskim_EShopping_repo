@@ -97,10 +97,10 @@ public class DataManager {
         if(!ascending) Collections.reverse(sortedItemDatabase);
         return new ShopStock(sortedItemDatabase);
     }
-    public String displayedDataToJson(int itemIndex) throws JsonProcessingException {
+    public String displayedDataToJson(int itemIndex, ExceptionType exceptionType) throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
         ShopItemContainer shopItemContainer = shopStock.getItemDatabase().isEmpty() ? null : shopStock.GetItemContainerByIndex(itemIndex);
-        DisplayedData jsonDataStructure = new DisplayedData(userData.getCash(), shopItemContainer);
+        DisplayedData jsonDataStructure = new DisplayedData(userData.getCash(), shopItemContainer, exceptionType);
         return objectMapper.writeValueAsString(jsonDataStructure);
     }
 

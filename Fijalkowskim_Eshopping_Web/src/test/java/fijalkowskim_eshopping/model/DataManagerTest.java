@@ -47,7 +47,7 @@ public class DataManagerTest {
             "false,1,10,1,NONE",
             "false,1,2,-1,ITEM_NOT_IN_DATABASE"
     })
-    public void testBuyItem(boolean nullItem, float price, float cash,int count, ExpectedException expectedException){
+    public void testBuyItem(boolean nullItem, float price, float cash,int count, ExceptionType expectedException){
         dataManager.userData.cash = cash;
         ShopItem item = nullItem ? null : new ShopItem("Test", price, "");
         try {
@@ -57,13 +57,13 @@ public class DataManagerTest {
 
             try {
                 dataManager.BuyAnItem(item);
-                assertEquals(expectedException,ExpectedException.NONE);
+                assertEquals(expectedException, ExceptionType.NONE);
             } catch (ItemNotInStockException ex) {
-                assertEquals(expectedException, ExpectedException.ITEM_NOT_IN_STOCK);
+                assertEquals(expectedException, ExceptionType.ITEM_NOT_IN_STOCK);
             } catch (NotEnoughMoneyException e) {
-                assertEquals(expectedException, ExpectedException.NOT_ENOUGH_MONEY);
+                assertEquals(expectedException, ExceptionType.NOT_ENOUGH_MONEY);
             } catch (ItemNotInDatabaseException e) {
-                assertEquals(expectedException, ExpectedException.ITEM_NOT_IN_DATABASE);
+                assertEquals(expectedException, ExceptionType.ITEM_NOT_IN_DATABASE);
             }
     }
     /**
@@ -79,21 +79,21 @@ public class DataManagerTest {
             "false,2,ITEM_ALREADY_IN_DATABASE",
             "true,1,ILLEGAL_ARGUMENT",
     })
-    public void testAddItemsToDatabase(boolean nullItem, int numberOfRepetitions, ExpectedException expectedException){
+    public void testAddItemsToDatabase(boolean nullItem, int numberOfRepetitions, ExceptionType expectedException){
        ShopItem item = nullItem ? null : new ShopItem();
 
        for (int i = 0; i < numberOfRepetitions; i++) {
            try {
                dataManager.AddItemToDatabase(item, 1);
            } catch (ItemAlreadyInDatabaseException e) {
-               assertEquals(expectedException, ExpectedException.ITEM_ALREADY_IN_DATABASE);
+               assertEquals(expectedException, ExceptionType.ITEM_ALREADY_IN_DATABASE);
                return;
            }catch(IllegalArgumentException ex){
-               assertEquals(expectedException, ExpectedException.ILLEGAL_ARGUMENT);
+               assertEquals(expectedException, ExceptionType.ILLEGAL_ARGUMENT);
                return;
            }
        }
-       assertEquals(expectedException, ExpectedException.NONE);
+       assertEquals(expectedException, ExceptionType.NONE);
 
     }
     /**

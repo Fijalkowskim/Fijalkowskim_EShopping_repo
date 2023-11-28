@@ -1,9 +1,11 @@
 package fijalkowskim_eshopping.servlets;
 
 import fijalkowskim_eshopping.controller.Controller;
+import fijalkowskim_eshopping.model.CookieVariables;
 import fijalkowskim_eshopping.model.ShopItemContainer;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -20,6 +22,7 @@ public class ChangeItemServlet extends HttpServlet {
         if(arg1.equals("next") || arg1.equals("previous")){
             boolean nextItem = arg1.equals("next");
             ShopItemContainer shopItemContainer = Controller.getInstance().ChangeItem(nextItem);
+            response.addCookie(new Cookie(CookieVariables.pageCookie, Integer.toString(Controller.getInstance().getCurrentItemIndex())));
             String jsonItem = shopItemContainer.toJson();
             PrintWriter out = response.getWriter();
             out.println(jsonItem);
