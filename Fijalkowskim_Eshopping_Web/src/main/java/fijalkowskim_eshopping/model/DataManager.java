@@ -97,6 +97,14 @@ public class DataManager {
         if(!ascending) Collections.reverse(sortedItemDatabase);
         return new ShopStock(sortedItemDatabase);
     }
+    /**
+     * Converts the relevant data, including user cash, information about a specific shop item
+     * (based on the provided index), and an exception type, into a JSON representation.
+     * @param itemIndex     Index of the shop item for which information is to be included in the JSON.
+     * @param exceptionType Type of exception to be included in the JSON.
+     * @return JSON representation of the displayed data, including user cash, shop item details, and exception type.
+     * @throws JsonProcessingException If there is an error during the JSON processing.
+     */
     public String displayedDataToJson(int itemIndex, ExceptionType exceptionType) throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
         ShopItemContainer shopItemContainer = shopStock.getItemDatabase().isEmpty() ? null : shopStock.GetItemContainerByIndex(itemIndex);

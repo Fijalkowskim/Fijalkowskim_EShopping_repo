@@ -49,6 +49,12 @@ public class ShopItemContainer {
         this.shopItem = shopItem;
         setCount(count);
     }
+    /**
+     * Converts the object to JSON format.
+     *
+     * @return JSON representation of the item.
+     * @throws JsonProcessingException If an error occurs during JSON processing.
+     */
     public String toJson() throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
         return objectMapper.writeValueAsString(this);

@@ -88,9 +88,20 @@ public class ShopItem {
     public void setDescription(String description) {
         this.description = description == null || description.isEmpty()  ? "No description" : description;
     }
+    /**
+     * Sets image URL.
+     *
+     * @param imageUrl URL of the item's image.
+     */
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl.isEmpty() ? "defaultUrl" : imageUrl;
     }
+    /**
+     * Converts the object to JSON format.
+     *
+     * @return JSON representation of the item.
+     * @throws JsonProcessingException If an error occurs during JSON processing.
+     */
     public String toJson() throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
         return objectMapper.writeValueAsString(this);

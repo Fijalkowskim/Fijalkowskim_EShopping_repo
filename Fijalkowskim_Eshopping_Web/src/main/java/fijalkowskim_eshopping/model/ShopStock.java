@@ -103,6 +103,13 @@ public class ShopStock {
         }
         return false;
     }
+    /**
+     * Retrieves the index of the given item in the database.
+     *
+     * @param item The item to find the index of.
+     * @return The index of the item in the database.
+     * @throws ItemNotInDatabaseException If the item is not in the database.
+     */
     public int GetItemIndex(ShopItem item) throws ItemNotInDatabaseException{
         for (int i = 0; i < itemDatabase.size(); i++) {
             if(itemDatabase.get(i).shopItem == item)
@@ -110,6 +117,12 @@ public class ShopStock {
         }
         throw new ItemNotInDatabaseException("Item is not in database");
     }
+    /**
+     * Sets the count of items at the specified index in the database.
+     *
+     * @param itemIndex Index of the item.
+     * @param newCount  New count to set.
+     */
     public void SetItemCount(int itemIndex, int newCount) {
         if(itemIndex >= getItemDatabase().size() || itemIndex < 0) return;
         getItemDatabase().get(itemIndex).setCount(newCount);
