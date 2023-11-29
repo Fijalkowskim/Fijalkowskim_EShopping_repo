@@ -1,12 +1,9 @@
 package fijalkowskim_eshopping.servlets;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fijalkowskim_eshopping.controller.Controller;
-import fijalkowskim_eshopping.model.ExceptionType;
-import fijalkowskim_eshopping.model.ItemNotInDatabaseException;
-import fijalkowskim_eshopping.model.ItemNotInStockException;
-import fijalkowskim_eshopping.model.NotEnoughMoneyException;
-import fijalkowskim_eshopping.model.CookieVariables;
+import fijalkowskim_eshopping.model.*;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.Cookie;
@@ -19,6 +16,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Map;
 import java.util.logging.Logger;
+import com.google.gson.Gson;
 
 @WebServlet("/buyItem")
 public class BuyItemServlet extends HttpServlet {
@@ -34,10 +32,10 @@ public class BuyItemServlet extends HttpServlet {
             response.addCookie(new Cookie(CookieVariables.cashCookie, Float.toString(controller.getDataManager().getUserData().getCash())));
               int itemIndex = controller.getCurrentItemIndex();
               if(savedItems != null){
-                savedItems.replace(itemIndex, controller.getTargetedShopStock().GetItemContainerByIndex(itemIndex).getCount());
-                    ObjectMapper objectMapper = new ObjectMapper();
-                    String itemsJson = objectMapper.writeValueAsString(savedItems);
-                   response.addCookie(new Cookie(CookieVariables.itemsCookie, itemsJson));
+                  savedItems.put(itemIndex, controller.getTargetedShopStock().GetItemContainerByIndex(itemIndex).getCount());
+                  String cookieName = CookieVariables.itemsCookie + Integer.toString(itemIndex);
+                  String cookieValue = savedItems.get(itemIndex).toString();
+                  response.addCookie(new Cookie(cookieName, cookieValue));
                 }
 
         } catch (NotEnoughMoneyException e) {
@@ -46,10 +44,12 @@ public class BuyItemServlet extends HttpServlet {
             exceptionType = ExceptionType.ITEM_NOT_IN_STOCK;
         } catch (ItemNotInDatabaseException e) {
             exceptionType = ExceptionType.ITEM_NOT_IN_DATABASE;
+        }finally {
+            String displayedData = controller.getDataManager().displayedDataToJson(controller.getCurrentItemIndex(),exceptionType);
+            PrintWriter out = response.getWriter();
+            out.println(displayedData);
         }
-        String displayedData = controller.getDataManager().displayedDataToJson(controller.getCurrentItemIndex(),exceptionType);
-        PrintWriter out = response.getWriter();
-        out.println(displayedData);
+
     }
 
     /**

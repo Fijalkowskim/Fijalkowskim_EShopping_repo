@@ -1,6 +1,8 @@
 package fijalkowskim_eshopping.servlets;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fijalkowskim_eshopping.controller.Controller;
 import fijalkowskim_eshopping.model.CookieVariables;
@@ -22,9 +24,10 @@ public class InitServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws JsonProcessingException, IOException {
         response.setContentType("application/json;charset=UTF-8");
-        BuyItemServlet.savedItems = new HashMap<>();
+        BuyItemServlet.savedItems = new HashMap<Integer,Integer>();
 
         Cookie[] cookies = request.getCookies();
+
 
         if(cookies != null){
             processCookies(cookies);
@@ -37,29 +40,29 @@ public class InitServlet extends HttpServlet {
     void processCookies(Cookie[] cookies){
         float savedCash = -1f;
         int savedPage = -1;
-        Map<Integer, Integer> savedItems = null;
         for(Cookie cookie : cookies) {
             if(cookie == null) continue;
-            switch (cookie.getName()){
-                case CookieVariables.cashCookie:
-                    savedCash = Float.parseFloat(cookie.getValue());
-                    break;
-                case CookieVariables.pageCookie:
-                    savedPage = Integer.parseInt(cookie.getValue());
-                    break;
-                case CookieVariables.itemsCookie:
-                    try {
-                        ObjectMapper objectMapper = new ObjectMapper();
-                        savedItems = objectMapper.readValue(cookie.getValue(), Map.class);
-                    } catch (IOException e) {
-
-                    }
-                    break;
-                default:
+            if (cookie.getName().contains("item")){
+                try {
+                    int key = Integer.parseInt(cookie.getName().replaceAll("\\D+", ""));
+                    BuyItemServlet.savedItems.put(key, Integer.parseInt(cookie.getValue()));
+                } catch (NumberFormatException e) {
+                }
+            }else{
+                switch (cookie.getName()){
+                    case CookieVariables.cashCookie:
+                        savedCash = Float.parseFloat(cookie.getValue());
+                        break;
+                    case CookieVariables.pageCookie:
+                        savedPage = Integer.parseInt(cookie.getValue());
+                        break;
+                    default:
+                }
             }
+
         }
 
-        Controller.getInstance().LoadSavedData(savedCash, savedItems, savedPage);
+        Controller.getInstance().LoadSavedData(savedCash, BuyItemServlet.savedItems, savedPage);
     }
 
 
