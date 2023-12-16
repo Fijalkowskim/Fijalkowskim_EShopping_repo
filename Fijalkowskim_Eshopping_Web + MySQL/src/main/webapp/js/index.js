@@ -56,6 +56,7 @@ function displayShopItemContainer(shopItemContainer){
     else{
         document.getElementById("item-name").innerHTML = shopItemContainer.shopItem.name;
         document.getElementById("item-image").src = "images/" + shopItemContainer.shopItem.imageUrl;
+        //document.getElementById("item-image").src = shopItemContainer.shopItem.imageUrl;
         document.getElementById("item-description").innerHTML = shopItemContainer.shopItem.description;
         document.getElementById("item-price").innerHTML = "$" + shopItemContainer.shopItem.price.toFixed(2);
         document.getElementById("item-amount").innerHTML = + shopItemContainer.count + " in stock";
