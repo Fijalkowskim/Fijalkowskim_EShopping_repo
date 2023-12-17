@@ -29,6 +29,7 @@ public class InitServlet extends HttpServlet {
         response.setContentType("application/json;charset=UTF-8");
         BuyItemServlet.savedItems = new HashMap<Integer,Integer>();
         createTables();
+        insertData();
 
         /*Cookie[] cookies = request.getCookies();
 
