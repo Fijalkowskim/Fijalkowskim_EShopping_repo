@@ -1,9 +1,6 @@
 package fijalkowskim_eshopping.servlets;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import fijalkowskim_eshopping.controller.Controller;
 import fijalkowskim_eshopping.model.CookieVariables;
 import fijalkowskim_eshopping.model.ExceptionType;
@@ -19,7 +16,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.*;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.List;
 
 @WebServlet("/init")
@@ -29,73 +25,69 @@ public class InitServlet extends HttpServlet {
         response.setContentType("application/json;charset=UTF-8");
         BuyItemServlet.savedItems = new HashMap<Integer,Integer>();
         createTables();
-        insertData();
-
-        /*Cookie[] cookies = request.getCookies();
-
-
-        if(cookies != null){
-            processCookies(cookies);
-
-        }*/
+        //insertExampleItems();
         String initDataJson = Controller.getInstance().getDataManager().displayedDataToJson(Controller.getInstance().getCurrentItemIndex(), ExceptionType.NONE);
         PrintWriter out = response.getWriter();
         out.println(initDataJson);
     }
     public void createTables() {
-        try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/eshopping", "root", "root")) {
+        try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/eshopping?useSSL=false", "root", "root")) {
             Statement statement = con.createStatement();
 
-            // Create Items table with auto-generated id
+            // Create Items table with auto-incremented id
             statement.executeUpdate("CREATE TABLE Items "
-                    + "(id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY, "
+                    + "(id INT AUTO_INCREMENT PRIMARY KEY, "
                     + "name VARCHAR(255), price FLOAT, description VARCHAR(255), imageUrl VARCHAR(255))");
             System.out.println("Table Items created");
 
             // Create ItemContainers table with foreign key reference
             statement.executeUpdate("CREATE TABLE ItemContainers "
-                    + "(itemId INTEGER, count INTEGER, "
+                    + "(itemId INT, count INT, "
                     + "FOREIGN KEY (itemId) REFERENCES Items(id))");
             System.out.println("Table ItemContainers created");
 
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            System.out.println(e.getMessage());
         }
     }
-    public void insertData() {
-        // make a connection to DB
-        try (Connection con = DriverManager.getConnection("jdbc:derby://localhost:1527/lab", "app", "app")) {
-            // Insert data from ShopItemContainer list
-            Statement statement = con.createStatement();
+    public void insertExampleItems() {
+        try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/eshopping?useSSL=false", "root", "root")) {
             List<ShopItemContainer> itemContainers = Controller.getInstance().getTargetedShopStock().getItemDatabase();
             for (ShopItemContainer container : itemContainers) {
                 String name = container.getShopItem().getName();
                 float price = container.getShopItem().getPrice();
                 String description = container.getShopItem().getDescription();
                 String imageUrl = container.getShopItem().getImageUrl();
+                int count = container.getCount();
 
-                // Use a PreparedStatement to handle parameters safely
-                String insertQuery = "INSERT INTO Items (name, price, description, imageUrl) VALUES (?, ?, ?, ?)";
-                try (PreparedStatement preparedStatement = con.prepareStatement(insertQuery, Statement.RETURN_GENERATED_KEYS)) {
-                    preparedStatement.setString(1, name);
-                    preparedStatement.setFloat(2, price);
-                    preparedStatement.setString(3, description);
-                    preparedStatement.setString(4, imageUrl);
-                    preparedStatement.executeUpdate();
+                // Insert data into Items table using PreparedStatement
+                String insertItemsQuery = "INSERT INTO Items (name, price, description, imageUrl) VALUES (?, ?, ?, ?)";
+                try (PreparedStatement preparedStatementItems = con.prepareStatement(insertItemsQuery, Statement.RETURN_GENERATED_KEYS)) {
+                    preparedStatementItems.setString(1, name);
+                    preparedStatementItems.setFloat(2, price);
+                    preparedStatementItems.setString(3, description);
+                    preparedStatementItems.setString(4, imageUrl);
+
+                    preparedStatementItems.executeUpdate();
 
                     // Get the auto-generated itemId
-                    ResultSet keys = preparedStatement.getGeneratedKeys();
+                    ResultSet keys = preparedStatementItems.getGeneratedKeys();
                     int generatedItemId = -1;
                     if (keys.next()) {
                         generatedItemId = keys.getInt(1);
 
-                        // Insert data into ItemContainers table
+                        // Insert data into ItemContainers table using another PreparedStatement
                         if (generatedItemId != -1) {
-                            statement.executeUpdate("INSERT INTO ItemContainers (itemId, count) VALUES (" + generatedItemId + ", 5)");
+                            String insertItemContainersQuery = "INSERT INTO ItemContainers (itemId, count) VALUES (?, ?)";
+                            try (PreparedStatement preparedStatementItemContainers = con.prepareStatement(insertItemContainersQuery)) {
+                                preparedStatementItemContainers.setInt(1, generatedItemId);
+                                preparedStatementItemContainers.setInt(2, count);
+                                preparedStatementItemContainers.executeUpdate();
+                            }
                         }
                     }
                 } catch (SQLException e) {
-                    e.printStackTrace();
+                    System.out.println(e.getMessage());
                 }
             }
 

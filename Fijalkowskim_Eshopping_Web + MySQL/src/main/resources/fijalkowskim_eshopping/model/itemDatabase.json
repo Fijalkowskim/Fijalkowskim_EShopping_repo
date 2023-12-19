@@ -3,35 +3,35 @@
     "name": "Apple",
     "price": 0.89,
     "description": "Just an apple.",
-    "imageURL": "apple.png",
+    "imageURL": "https://github.com/Fijalkowskim/Fijalkowskim_EShopping_repo/blob/main/Fijalkowskim_Eshopping_Web%20+%20MySQL/src/main/webapp/images/apple.png?raw=true",
     "count": 37
   },
   {
     "name": "Bike",
     "price": 300,
     "description": "Small BMX for children.",
-    "imageURL": "bike.png",
+    "imageURL": "https://github.com/Fijalkowskim/Fijalkowskim_EShopping_repo/blob/main/Fijalkowskim_Eshopping_Web%20+%20MySQL/src/main/webapp/images/bike.png?raw=true",
     "count": 6
   },
   {
     "name": "Creatine 400g",
     "price": 39.49,
     "description": "Creatine monohydrat.",
-    "imageURL": "creatine.png",
+    "imageURL": "https://github.com/Fijalkowskim/Fijalkowskim_EShopping_repo/blob/main/Fijalkowskim_Eshopping_Web%20+%20MySQL/src/main/webapp/images/creatine.png?raw=true",
     "count": 117
   },
   {
     "name": "Samsung TV",
     "price": 2049.99,
     "description": "75 inch Samsung TV.",
-    "imageURL": "tv.png",
+    "imageURL": "https://github.com/Fijalkowskim/Fijalkowskim_EShopping_repo/blob/main/Fijalkowskim_Eshopping_Web%20+%20MySQL/src/main/webapp/images/tv.png?raw=true",
     "count": 3
   },
   {
     "name": "One dollar",
     "price": 5.55,
     "description": "One dollar for more than one dollar",
-    "imageURL": "dollar.png",
+    "imageURL": "https://github.com/Fijalkowskim/Fijalkowskim_EShopping_repo/blob/main/Fijalkowskim_Eshopping_Web%20+%20MySQL/src/main/webapp/images/dollar.png?raw=true",
     "count": 9786
   }
 ]
