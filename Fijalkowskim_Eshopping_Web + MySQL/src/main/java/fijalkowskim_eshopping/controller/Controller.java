@@ -22,9 +22,7 @@ public class Controller {
 
     private Connection dbConnection;
 
-    public Connection getDbConnection() {
-        return dbConnection;
-    }
+
 
     private Controller() {
         this.dataManager = new DataManager();
@@ -84,6 +82,15 @@ public class Controller {
      */
     public ShopItemContainer getCurrentShopItemContainer() {
         return currentShopItemContainer;
+    }
+
+    /**
+     * Gets the database connection.
+     *
+     * @return The database connection.
+     */
+    public Connection getDbConnection() {
+        return dbConnection;
     }
 
     /**
