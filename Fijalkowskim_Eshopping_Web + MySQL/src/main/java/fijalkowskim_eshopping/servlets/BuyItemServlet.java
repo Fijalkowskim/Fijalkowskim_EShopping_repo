@@ -10,10 +10,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.sql.*;
 
 @WebServlet("/buyItem")
 public class BuyItemServlet extends HttpServlet {
@@ -27,32 +24,36 @@ public class BuyItemServlet extends HttpServlet {
             controller.TryToBuyItem();
               int itemID = controller.getCurrentShopItemContainer().getShopItem().getID();
               int newCount = controller.getCurrentShopItemContainer().getCount();
-            try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/eshopping?useSSL=false", "root", "root")) {
-                String updateQuery = "UPDATE ItemContainers SET count = ? WHERE itemId = ?";
-                try (PreparedStatement preparedStatement = con.prepareStatement(updateQuery)) {
-                    preparedStatement.setInt(1, newCount);
-                    preparedStatement.setInt(2, itemID);
-                    preparedStatement.executeUpdate();
-                }
-                catch (SQLException e) {
-                    System.out.println(e.getMessage());
-                }
-
-                String updateCashQuery = "UPDATE SessionData SET cash = ? WHERE userId = ?";
-                try (PreparedStatement preparedStatement = con.prepareStatement(updateCashQuery)) {
-                    preparedStatement.setFloat(1, controller.getDataManager().getUserData().getCash());
-                    preparedStatement.setInt(2, controller.getDataManager().getUserData().getId());
-                    preparedStatement.executeUpdate();
-                }
-                catch (SQLException e) {
-                    System.out.println(e.getMessage());
-                }
-
-                con.commit(); // Commit the transaction if everything is successful
-            } catch (SQLException e) {
-                System.out.println(e.getMessage());
+            Connection con = Controller.getInstance().getDbConnection();
+            if(con == null) {
+                exceptionType = ExceptionType.DATABASE_EXCEPTION;
             }
+            else {
 
+                try {
+                    String updateQuery = "UPDATE ItemContainers SET count = ? WHERE itemId = ?";
+                    try (PreparedStatement preparedStatement = con.prepareStatement(updateQuery)) {
+                        preparedStatement.setInt(1, newCount);
+                        preparedStatement.setInt(2, itemID);
+                        preparedStatement.executeUpdate();
+                    } catch (SQLException e) {
+
+                    }
+
+                    String updateCashQuery = "UPDATE SessionData SET cash = ? WHERE userId = ?";
+                    try (PreparedStatement preparedStatement = con.prepareStatement(updateCashQuery)) {
+                        preparedStatement.setFloat(1, controller.getDataManager().getUserData().getCash());
+                        preparedStatement.setInt(2, controller.getDataManager().getUserData().getId());
+                        preparedStatement.executeUpdate();
+                    } catch (SQLException e) {
+
+                    }
+
+                    con.commit(); // Commit the transaction if everything is successful
+                } catch (SQLException e) {
+
+                }
+            }
 
 
         } catch (NotEnoughMoneyException e) {
@@ -66,6 +67,7 @@ public class BuyItemServlet extends HttpServlet {
             PrintWriter out = response.getWriter();
             out.println(displayedData);
         }
+
 
     }
 

@@ -19,6 +19,7 @@ import java.util.List;
 
 @WebServlet("/init")
 public class InitServlet extends HttpServlet {
+    ExceptionType currentException = ExceptionType.NONE;
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws JsonProcessingException, IOException {
         response.setContentType("application/json;charset=UTF-8");
@@ -26,21 +27,29 @@ public class InitServlet extends HttpServlet {
         loginUser();
         loadSessionFromDatabase();
         //insertExampleItems();
-        String initDataJson = Controller.getInstance().getDataManager().displayedDataToJson(Controller.getInstance().getCurrentPage(), ExceptionType.NONE);
+        String initDataJson = Controller.getInstance().getDataManager().displayedDataToJson(Controller.getInstance().getCurrentPage(), currentException);
         PrintWriter out = response.getWriter();
         out.println(initDataJson);
     }
     public void createTables() {
-        try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/eshopping?useSSL=false", "root", "root")) {
-            Statement statement = con.createStatement();
+        Connection con = Controller.getInstance().getDbConnection();
+        if(con == null) {
+            currentException = ExceptionType.DATABASE_EXCEPTION;
+            return;
+        }
+        Statement statement = null;
+        try {
+            statement = con.createStatement();
+        } catch (SQLException ex) {
+        }
 
-            try {
+        try {
                 statement.executeUpdate("CREATE TABLE Items "
                         + "(id INT AUTO_INCREMENT PRIMARY KEY, "
                         + "name VARCHAR(255), price FLOAT, description VARCHAR(255), imageUrl VARCHAR(255))");
                 System.out.println("Table Items created");
             }catch (SQLException e) {
-                System.out.println(e.getMessage());
+
             }
 
             try{
@@ -49,7 +58,7 @@ public class InitServlet extends HttpServlet {
                     + "FOREIGN KEY (itemId) REFERENCES Items(id))");
             System.out.println("Table ItemContainers created");
             }catch (SQLException e) {
-                System.out.println(e.getMessage());
+
             }
 
             try{
@@ -57,15 +66,18 @@ public class InitServlet extends HttpServlet {
                         + "(userID INT, cash FLOAT, pageIndex INT)");
                 System.out.println("Table SessionData created");
             }catch (SQLException e) {
-                System.out.println(e.getMessage());
+
             }
 
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-        }
+
     }
     void loginUser() {
-        try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/eshopping?useSSL=false", "root", "root")) {
+        Connection con = Controller.getInstance().getDbConnection();
+        if(con == null) {
+            currentException = ExceptionType.DATABASE_EXCEPTION;
+            return;
+        }
+        try{
             int currentUserId = Controller.getInstance().getDataManager().getUserData().getId();
             String selectUserQuery = "SELECT * FROM SessionData WHERE userId = ?";
             try (PreparedStatement preparedStatementUser = con.prepareStatement(selectUserQuery)) {
@@ -83,7 +95,7 @@ public class InitServlet extends HttpServlet {
                 }
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            currentException = ExceptionType.DATABASE_EXCEPTION;
         }
     }
     public void loadSessionFromDatabase() {
@@ -92,7 +104,14 @@ public class InitServlet extends HttpServlet {
         int loadedPageIndex = 0;
         int loggedUserID = Controller.getInstance().getDataManager().getUserData().getId();
 
-        try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/eshopping?useSSL=false", "root", "root")) {
+        Connection con = Controller.getInstance().getDbConnection();
+        if(con == null) {
+            Controller.getInstance().LoadSavedData(loadedCash, loadedItemContainers, loadedPageIndex);
+            currentException = ExceptionType.DATABASE_EXCEPTION;
+            return;
+        }
+
+        try {
             String selectItemsQuery = "SELECT * FROM Items";
             try (PreparedStatement preparedStatementItems = con.prepareStatement(selectItemsQuery)) {
                 ResultSet itemsResultSet = preparedStatementItems.executeQuery();

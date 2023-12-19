@@ -2,6 +2,7 @@ package fijalkowskim_eshopping.servlets;
 
 import fijalkowskim_eshopping.controller.Controller;
 import fijalkowskim_eshopping.model.CookieVariables;
+import fijalkowskim_eshopping.model.ExceptionType;
 import fijalkowskim_eshopping.model.ShopItemContainer;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -26,19 +27,19 @@ public class ChangeItemServlet extends HttpServlet {
         if(arg1.equals("next") || arg1.equals("previous")){
             boolean nextItem = arg1.equals("next");
             ShopItemContainer shopItemContainer = Controller.getInstance().ChangeItem(nextItem);
-            try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/eshopping?useSSL=false", "root", "root")) {
-                String updatePageQuery = "UPDATE SessionData SET pageIndex = ? WHERE userId = ?";
-                try (PreparedStatement preparedStatement = con.prepareStatement(updatePageQuery)) {
-                    preparedStatement.setInt(1, Controller.getInstance().getCurrentPage());
-                    preparedStatement.setInt(2, Controller.getInstance().getDataManager().getUserData().getId());
-                    preparedStatement.executeUpdate();
+
+            Connection con = Controller.getInstance().getDbConnection();
+            if(con != null) {
+                try {
+                    String updatePageQuery = "UPDATE SessionData SET pageIndex = ? WHERE userId = ?";
+                    try (PreparedStatement preparedStatement = con.prepareStatement(updatePageQuery)) {
+                        preparedStatement.setInt(1, Controller.getInstance().getCurrentPage());
+                        preparedStatement.setInt(2, Controller.getInstance().getDataManager().getUserData().getId());
+                        preparedStatement.executeUpdate();
+                    } catch (SQLException e) {
+                    }
+                } catch (Exception e) {
                 }
-                catch (SQLException e) {
-                    System.out.println(e.getMessage());
-                }
-            }
-            catch (SQLException e) {
-                System.out.println(e.getMessage());
             }
             String jsonItem = shopItemContainer.toJson();
             PrintWriter out = response.getWriter();

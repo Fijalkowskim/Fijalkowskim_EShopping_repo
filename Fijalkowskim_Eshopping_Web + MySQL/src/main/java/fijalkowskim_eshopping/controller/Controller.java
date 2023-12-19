@@ -2,6 +2,7 @@ package fijalkowskim_eshopping.controller;
 
 import fijalkowskim_eshopping.model.*;
 
+import java.sql.*;
 import java.util.List;
 
 /**
@@ -19,6 +20,12 @@ public class Controller {
     private ShopItemContainer currentShopItemContainer;
     private SortingOrder currentSortingOrder;
 
+    private Connection dbConnection;
+
+    public Connection getDbConnection() {
+        return dbConnection;
+    }
+
     private Controller() {
         this.dataManager = new DataManager();
         dataManager.LoadDatabase();
@@ -26,6 +33,12 @@ public class Controller {
         currentSortingOrder = SortingOrder.NO_SORTING;
         targetedShopStock = dataManager.getShopStock();
         currentShopItemContainer = targetedShopStock.GetItemContainerByIndex(currentPage);
+        dbConnection = null;
+        try {
+            dbConnection = DriverManager.getConnection("jdbc:mysql://localhost:3306/eshopping?useSSL=false", "root", "root");
+        } catch (SQLException e) {
+
+        }
     }
 
     /**

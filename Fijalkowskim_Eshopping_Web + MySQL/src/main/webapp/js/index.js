@@ -89,6 +89,8 @@ function displayException(exceptionType){
         case "ITEM_NOT_IN_DATABASE":
             errorText = "Item not in database"
             break;
+        case"DATABASE_EXCEPTION":
+            errorText = "Cannot connect to database"
         default:
             errorText = ""
                 break;
