@@ -28,7 +28,7 @@ public class UserDataTest {
             "true,5,0"
     })
     public void testUserDataConstructor(boolean defaultConstructor,float cash, float expectedCash){
-        UserData userData = defaultConstructor ? new UserData() : new UserData(cash);
+        UserData userData = defaultConstructor ? new UserData() : new UserData(0,cash);
         assertEquals(userData.cash, expectedCash);
     }
 

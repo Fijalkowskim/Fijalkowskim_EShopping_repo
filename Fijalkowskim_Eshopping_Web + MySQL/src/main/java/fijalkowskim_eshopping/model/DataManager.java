@@ -30,15 +30,15 @@ public class DataManager {
      * Initialises shop stock and user cash.
      * @param cash Cash of the user
      */
-    public DataManager(float cash){
+    public DataManager(int userID, float cash){
         shopStock = new ShopStock();
-        userData = new UserData(cash);
+        userData = new UserData(userID,cash);
     }
     /**
      * Initialises shop stock and user data (cash to 0).
      */
     public DataManager() {
-        this(1000);
+        this(0,1000);
     }
 
     /**
@@ -65,7 +65,9 @@ public class DataManager {
             JsonNode rootNode = objectMapper.readTree(DataManager.class.getResource("itemDatabase.json"));
 
             for (JsonNode jsonNode : rootNode) {
-                AddItemToDatabase(new ShopItem(jsonNode.get("name").asText(),
+                AddItemToDatabase(new ShopItem(
+                        jsonNode.get("id").asInt(),
+                        jsonNode.get("name").asText(),
                         (float) jsonNode.get("price").asDouble(),
                         jsonNode.get("description").asText(),
                         jsonNode.get("imageURL").asText()),

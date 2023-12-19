@@ -12,6 +12,7 @@ import java.net.URL;
  * @version 2.0
  */
 public class ShopItem {
+    int id;
     String name;
     float price;
     String description;
@@ -23,7 +24,8 @@ public class ShopItem {
      * @param price Item's price.
      * @param description Item's description.
      */
-    public ShopItem(String name, float price, String description, String imageUrl){
+    public ShopItem(int id,String name, float price, String description, String imageUrl){
+        setID(id);
         setName(name);
         setPrice(price);
         setDescription(description);
@@ -48,8 +50,12 @@ public class ShopItem {
 
      */
     public ShopItem(String name, float price, String description){
-        this(name,price,description,"");
+        this(0,name,price,description,"");
     }
+    /**
+     * @return "ID" of the item.
+     */
+    public int getID(){return id;}
     /**
      * @return Name of the item.
      */
@@ -64,6 +70,14 @@ public class ShopItem {
     public String getDescription() {return description;}
     public String getImageUrl() {
         return imageUrl;
+    }
+    /**
+     * Sets id
+     * @param id
+     */
+
+    public void setID(int id) {
+        this.id = id < 0  ? 0 : id ;
     }
     /**
      * Sets name

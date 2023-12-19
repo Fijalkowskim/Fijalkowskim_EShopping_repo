@@ -12,6 +12,10 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 
 @WebServlet("/changeItem")
 public class ChangeItemServlet extends HttpServlet {
@@ -22,7 +26,20 @@ public class ChangeItemServlet extends HttpServlet {
         if(arg1.equals("next") || arg1.equals("previous")){
             boolean nextItem = arg1.equals("next");
             ShopItemContainer shopItemContainer = Controller.getInstance().ChangeItem(nextItem);
-            response.addCookie(new Cookie(CookieVariables.pageCookie, Integer.toString(Controller.getInstance().getCurrentItemIndex())));
+            try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/eshopping?useSSL=false", "root", "root")) {
+                String updatePageQuery = "UPDATE SessionData SET pageIndex = ? WHERE userId = ?";
+                try (PreparedStatement preparedStatement = con.prepareStatement(updatePageQuery)) {
+                    preparedStatement.setInt(1, Controller.getInstance().getCurrentPage());
+                    preparedStatement.setInt(2, Controller.getInstance().getDataManager().getUserData().getId());
+                    preparedStatement.executeUpdate();
+                }
+                catch (SQLException e) {
+                    System.out.println(e.getMessage());
+                }
+            }
+            catch (SQLException e) {
+                System.out.println(e.getMessage());
+            }
             String jsonItem = shopItemContainer.toJson();
             PrintWriter out = response.getWriter();
             out.println(jsonItem);

@@ -1,26 +1,22 @@
 package fijalkowskim_eshopping.servlets;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import fijalkowskim_eshopping.controller.Controller;
 import fijalkowskim_eshopping.model.*;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-import java.io.Console;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Map;
-import java.util.logging.Logger;
-import com.google.gson.Gson;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 
 @WebServlet("/buyItem")
 public class BuyItemServlet extends HttpServlet {
-    static Map<Integer, Integer> savedItems;
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("application/json;charset=UTF-8");
@@ -29,14 +25,35 @@ public class BuyItemServlet extends HttpServlet {
 
         try {
             controller.TryToBuyItem();
-            response.addCookie(new Cookie(CookieVariables.cashCookie, Float.toString(controller.getDataManager().getUserData().getCash())));
-              int itemIndex = controller.getCurrentItemIndex();
-              if(savedItems != null){
-                  savedItems.put(itemIndex, controller.getTargetedShopStock().GetItemContainerByIndex(itemIndex).getCount());
-                  String cookieName = CookieVariables.itemsCookie + Integer.toString(itemIndex);
-                  String cookieValue = savedItems.get(itemIndex).toString();
-                  response.addCookie(new Cookie(cookieName, cookieValue));
+              int itemID = controller.getCurrentShopItemContainer().getShopItem().getID();
+              int newCount = controller.getCurrentShopItemContainer().getCount();
+            try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/eshopping?useSSL=false", "root", "root")) {
+                String updateQuery = "UPDATE ItemContainers SET count = ? WHERE itemId = ?";
+                try (PreparedStatement preparedStatement = con.prepareStatement(updateQuery)) {
+                    preparedStatement.setInt(1, newCount);
+                    preparedStatement.setInt(2, itemID);
+                    preparedStatement.executeUpdate();
                 }
+                catch (SQLException e) {
+                    System.out.println(e.getMessage());
+                }
+
+                String updateCashQuery = "UPDATE SessionData SET cash = ? WHERE userId = ?";
+                try (PreparedStatement preparedStatement = con.prepareStatement(updateCashQuery)) {
+                    preparedStatement.setFloat(1, controller.getDataManager().getUserData().getCash());
+                    preparedStatement.setInt(2, controller.getDataManager().getUserData().getId());
+                    preparedStatement.executeUpdate();
+                }
+                catch (SQLException e) {
+                    System.out.println(e.getMessage());
+                }
+
+                con.commit(); // Commit the transaction if everything is successful
+            } catch (SQLException e) {
+                System.out.println(e.getMessage());
+            }
+
+
 
         } catch (NotEnoughMoneyException e) {
             exceptionType = ExceptionType.NOT_ENOUGH_MONEY;
@@ -45,7 +62,7 @@ public class BuyItemServlet extends HttpServlet {
         } catch (ItemNotInDatabaseException e) {
             exceptionType = ExceptionType.ITEM_NOT_IN_DATABASE;
         }finally {
-            String displayedData = controller.getDataManager().displayedDataToJson(controller.getCurrentItemIndex(),exceptionType);
+            String displayedData = controller.getDataManager().displayedDataToJson(controller.getCurrentPage(),exceptionType);
             PrintWriter out = response.getWriter();
             out.println(displayedData);
         }

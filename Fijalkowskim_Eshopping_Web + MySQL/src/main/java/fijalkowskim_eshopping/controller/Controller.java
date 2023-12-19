@@ -2,8 +2,7 @@ package fijalkowskim_eshopping.controller;
 
 import fijalkowskim_eshopping.model.*;
 
-import java.util.Dictionary;
-import java.util.Map;
+import java.util.List;
 
 /**
  * Main controller of the program (Singleton).
@@ -15,7 +14,7 @@ import java.util.Map;
 public class Controller {
     private static final Controller INSTANCE = new Controller();
     private DataManager dataManager;
-    private int currentItemIndex;
+    private int currentPage;
     private ShopStock targetedShopStock;
     private ShopItemContainer currentShopItemContainer;
     private SortingOrder currentSortingOrder;
@@ -23,10 +22,10 @@ public class Controller {
     private Controller() {
         this.dataManager = new DataManager();
         dataManager.LoadDatabase();
-        currentItemIndex = 0;
+        currentPage = 0;
         currentSortingOrder = SortingOrder.NO_SORTING;
         targetedShopStock = dataManager.getShopStock();
-        currentShopItemContainer = targetedShopStock.GetItemContainerByIndex(currentItemIndex);
+        currentShopItemContainer = targetedShopStock.GetItemContainerByIndex(currentPage);
     }
 
     /**
@@ -52,8 +51,8 @@ public class Controller {
      *
      * @return The index of the currently selected item.
      */
-    public int getCurrentItemIndex() {
-        return currentItemIndex;
+    public int getCurrentPage() {
+        return currentPage;
     }
 
     /**
@@ -83,7 +82,7 @@ public class Controller {
      */
     public void TryToBuyItem() throws NotEnoughMoneyException, ItemNotInStockException, ItemNotInDatabaseException {
         try {
-            ShopItemContainer itemContainer = targetedShopStock.getItemDatabase().get(currentItemIndex);
+            ShopItemContainer itemContainer = targetedShopStock.getItemDatabase().get(currentPage);
             dataManager.BuyAnItem(itemContainer.getShopItem());
         } catch (NotEnoughMoneyException | ItemNotInStockException | ItemNotInDatabaseException ex) {
             throw ex;
@@ -97,10 +96,10 @@ public class Controller {
      * @return The new current shop item container.
      */
     public ShopItemContainer ChangeItem(boolean nextItem) {
-        currentItemIndex = nextItem ? (currentItemIndex == targetedShopStock.getItemDatabase().size() - 1 ? 0 : currentItemIndex + 1)
-                : (currentItemIndex == 0 ? targetedShopStock.getItemDatabase().size() - 1 : currentItemIndex - 1);
-        currentShopItemContainer = targetedShopStock.GetItemContainerByIndex(currentItemIndex);
-        return targetedShopStock.GetItemContainerByIndex(currentItemIndex);
+        currentPage = nextItem ? (currentPage == targetedShopStock.getItemDatabase().size() - 1 ? 0 : currentPage + 1)
+                : (currentPage == 0 ? targetedShopStock.getItemDatabase().size() - 1 : currentPage - 1);
+        currentShopItemContainer = targetedShopStock.GetItemContainerByIndex(currentPage);
+        return targetedShopStock.GetItemContainerByIndex(currentPage);
     }
 
     /**
@@ -113,7 +112,7 @@ public class Controller {
             return;
         try {
             currentShopItemContainer = targetedShopStock.GetItemContainerInDatabase(item);
-            currentItemIndex = targetedShopStock.GetItemIndex(item);
+            currentPage = targetedShopStock.GetItemIndex(item);
         } catch (ItemNotInDatabaseException e) {
             // Handle the exception or log it
         }
@@ -139,21 +138,26 @@ public class Controller {
      * Loads saved data into the controller.
      *
      * @param savedCash         The saved cash amount.
-     * @param savedItemsAmount  The saved items and their amounts.
+     * @param savedItemContainers  The saved items and their amounts.
      * @param savedPageIndex    The saved index of the currently selected item.
      */
-    public void LoadSavedData(float savedCash, Map<Integer, Integer> savedItemsAmount, int savedPageIndex) {
+    public void LoadSavedData(float savedCash, List<ShopItemContainer> savedItemContainers, int savedPageIndex) {
         if (savedCash >= 0)
             dataManager.getUserData().setCash(savedCash);
-        if (savedPageIndex >= 0 && savedPageIndex < targetedShopStock.getItemDatabase().size()) {
-            currentItemIndex = savedPageIndex;
-            currentShopItemContainer = targetedShopStock.GetItemContainerByIndex(currentItemIndex);
-        }
 
-        if (savedItemsAmount != null) {
-            for (Map.Entry<Integer, Integer> entry : savedItemsAmount.entrySet()) {
-                targetedShopStock.SetItemCount(entry.getKey(), entry.getValue());
+        if (savedItemContainers != null) {
+            targetedShopStock.ClearDatabase();
+            for(ShopItemContainer itemContainer : savedItemContainers){
+                try {
+                    targetedShopStock.AddItemToDatabase(itemContainer.getShopItem(), itemContainer.getCount());
+                } catch (Exception e) {
+                    System.out.println(e.getMessage());
+                }
             }
+        }
+        if (savedPageIndex >= 0 && savedPageIndex < targetedShopStock.getItemDatabase().size()) {
+            currentPage = savedPageIndex;
+            currentShopItemContainer = targetedShopStock.GetItemContainerByIndex(currentPage);
         }
     }
 }
