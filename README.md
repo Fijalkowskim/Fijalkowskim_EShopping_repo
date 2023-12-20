@@ -16,6 +16,8 @@ Each version serves as a different interface for the EShopping application, prov
 ### 1. Fijalkowskim_EShopping_Console
 
 This version provides a console-based interface for the EShopping application. Users can interact with the system through a text-based menu, viewing and purchasing items.
+![image](https://github.com/Fijalkowskim/Fijalkowskim_EShopping_repo/assets/91847461/208eba41-0ec1-444f-854a-6781d652908b)
+
 
 #### Example Code:
 
@@ -30,6 +32,7 @@ public class InitServlet extends HttpServlet {
 ### 2. Fijalkowskim_Eshopping_JavaFX
 
 This version utilizes JavaFX to create a graphical user interface for the EShopping application. Users can browse items, view details, and make purchases through an interactive graphical interface.
+![image](https://github.com/Fijalkowskim/Fijalkowskim_EShopping_repo/assets/91847461/8532298a-2a36-4d2d-9ee7-f9942508a615)
 
 #### Example Code:
 
@@ -44,6 +47,7 @@ public class InitServlet extends HttpServlet {
 ### 3. Fijalkowskim_Eshopping_Web
 
 This version provides a web-based interface for the EShopping application. Users can access the system through a web browser, browse items, and perform transactions.
+![image](https://github.com/Fijalkowskim/Fijalkowskim_EShopping_repo/assets/91847461/5a8d5cac-afb1-4219-a77e-3f95c71df316)
 
 #### Example Code:
 
@@ -58,6 +62,9 @@ public class InitServlet extends HttpServlet {
 ### 4. Fijalkowskim_Eshopping_Web + MySQL
 
 This version extends the web-based version by incorporating MySQL for data storage. It includes database creation scripts and interactions for managing items, user sessions, and purchases.
+![image](https://github.com/Fijalkowskim/Fijalkowskim_EShopping_repo/assets/91847461/bc93be35-07bc-4ede-a20f-9bf0b91bda2f)
+![image](https://github.com/Fijalkowskim/Fijalkowskim_EShopping_repo/assets/91847461/a4d5f818-8ff3-400b-b399-39ca1eb95ec8)
+
 
 #### Example Code:
 
